@@ -1,0 +1,62 @@
+/* TYPOGRAPHY */
+/* Define fuentes, tamaños de texto, y jerarquía tipográfica. */
+
+/* - - - F O N T S - - - */
+
+@font-face {
+    font-family: "Editorial New";
+    src: url("../assets/fonts/PPEditorialNew-Ultralight.woff2") format("woff2");
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Neue Montreal";
+    src: url("../assets/fonts/NeueMontreal-Regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Neue Montreal";
+    src: url("../assets/fonts/NeueMontreal-Bold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+}
+
+/* - - - V A R I A B L E S - - - */
+
+:root {
+    --body-font: "Neue Montreal", arial, Helvetica, sans-serif;
+    --heading-font: "Editorial New", Georgia, serif;
+
+
+    /* - - FONT SIZE - - */
+
+    /* Body Font */
+    --bf-base: clamp(18px, 1.25vw, 22px);
+    --bf-s: 16px;
+    --bf-xs: clamp(14px, 0.9375vw, 18px);
+    --bf-2xs: 12px;
+
+    /* Heading Font */
+    --hf-xl: clamp(129px, 9.9vw, 200px);
+    --hf-xl-m: clamp(80px, 14.1vw, 129px);
+    --hf-l: clamp(80px, calc(8.33vw - 40px), 120px);
+    --hf-l-m: 58px;
+    --hf-base: 64px;
+    --hf-s: 58px;
+    --hf-xs: 50px;
+    --hf-2xs: 44px;
+    --hf-3xs: 40px;
+    --hf-4xs: 24px;
+}
+
+/* - - - B E T T E R    T Y P E    R E N D E R - - - */
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

@@ -1,0 +1,42 @@
+/* VARIABLES */
+/* Variables CSS (colores, espaciados, etc.) para facilitar mantenimiento. */
+
+/* - - - V A R I A B L E S - - - */
+:root {
+    /* - - COLORES - - */
+    --grey: #ECECEC;
+    --purple: #d0befa;
+    --white: #FFF0E4;
+    --brown: #24190b;
+    --yellow: #ffd35f;
+    --green: #9da795;
+    --dark-green: #575446;
+
+
+
+    /* - - ESPACIOS - - */
+    --sp-3xl: 120px;
+    --sp-2xl: clamp(100px, 7.8125vw, 150px);
+    --sp-xl: 80px;
+    --sp-l: clamp(55px, 2.343vw + 25px, 70px);
+    --sp-base: 44px;
+    --sp-s: 30px;
+    --sp-xs: 18px;
+    --sp-2xs: 12px;
+
+    /* - - BORDER RADIUS - - */
+    --radius-none: 0;
+    --radius-m: 4px;
+    --radius-l: 10px;
+    --radius-full: 999px;
+
+    /* - - BOTTOM - - */
+    --btn-size: clamp(90px, 6.25vw, 116px);
+    --btn-border-scale: 1;
+
+    /* - - LAYOUT - - */
+    --page-padding: clamp(20px, 2.083vw, 56px);
+    --content-max-width: 1920px;
+
+
+}

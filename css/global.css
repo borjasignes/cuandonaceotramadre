@@ -1,0 +1,266 @@
+/* GLOBAL */
+
+::selection {
+    background-color: var(--brown);
+    color: var(--green);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body.is-scroll-locked {
+    overflow: hidden;
+}
+
+/* @view-transition {
+    navigation: auto;
+} */
+
+/* - - COLORES - - */
+
+/* color */
+.grey {
+    color: var(--grey);
+}
+
+
+/* background color */
+.green {
+    background-color: var(--green);
+}
+
+html,
+body {
+    background-color: var(--green);
+
+}
+
+
+/* - - ESPACIOS - - */
+.sp-xs {
+    margin-top: var(--sp-xs);
+}
+
+.sp-l {
+    margin-top: var(--sp-l);
+}
+
+/* - - BORDER RADIUS - - */
+
+/* - - BOTONES - - */
+.btn {
+    border: solid 1px var(--dark-green);
+    border-radius: var(--radius-full);
+    width: var(--btn-size);
+    height: var(--btn-size);
+
+    font-size: var(--bf-xs);
+    text-transform: uppercase;
+    color: var(--dark-green);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn.btn-breath {
+    position: relative;
+    border: 0;
+}
+
+.btn.btn-breath::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    border: solid 1px var(--dark-green);
+    border-radius: inherit;
+
+    transform: scale(1);
+    transform-origin: center;
+    transition: transform 0.6s ease;
+
+    pointer-events: none;
+}
+
+.btn.btn-breath:hover::before {
+    transform: scale(1.2);
+}
+
+
+/* - - FONT STYLES - - */
+body {
+    font-family: var(--body-font);
+    font-size: var(--bf-base);
+    font-weight: 400;
+}
+
+/* Body Font */
+.bf-s {
+    font-family: var(--body-font);
+    font-size: var(--bf-s);
+}
+
+.bf-xs {
+    font-family: var(--body-font);
+    font-size: var(--bf-xs);
+}
+
+.bf-2xs {
+    font-family: var(--body-font);
+    font-size: var(--bf-2xs);
+}
+
+/* Heading Font */
+.hf-xl {
+    font-family: var(--heading-font);
+    font-size: var(--hf-xl-m);
+    line-height: 0.9;
+    /* text-wrap: balance; */
+    text-align: center;
+
+    @media(min-width:1280px) {
+        font-size: var(--hf-xl);
+    }
+}
+
+.hf-l {
+    font-family: var(--heading-font);
+    font-size: var(--hf-l-m);
+    line-height: 0.9;
+    text-align: center;
+
+    @media (min-width:1280px) {
+        font-size: var(--hf-l);
+        text-align: left;
+        line-height: 1;
+    }
+}
+
+.hf-base {
+    font-family: var(--heading-font);
+    font-size: var(--hf-base);
+}
+
+
+.hf-s {
+    font-family: var(--heading-font);
+    font-size: var(--hf-s);
+}
+
+.hf-xs {
+    font-family: var(--heading-font);
+    font-size: var(--hf-xs);
+}
+
+.hf-2xs {
+    font-family: var(--heading-font);
+    font-size: var(--hf-2xs);
+}
+
+.hf-3xs {
+    font-family: var(--heading-font);
+    font-size: var(--hf-2xs);
+}
+
+.hf-4xs {
+    font-family: var(--heading-font);
+    font-size: var(--hf-2xs);
+}
+
+/* Text aling */
+
+.txt-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-xs);
+
+    text-wrap: pretty;
+
+    @media(min-width:1280px) {
+        gap: var(--sp-s);
+    }
+}
+
+.txt-block__center {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-xs);
+
+    color: var(--grey);
+
+    text-wrap: pretty;
+
+    @media(min-width:1280px) {
+        gap: var(--sp-s);
+        text-align: center;
+        width: 40%;
+    }
+}
+
+/* - - LAYOUT - - */
+.wrap {
+    width: calc(100% - (var(--page-padding) * 2));
+    max-width: var(--content-max-width);
+    margin-inline: auto;
+}
+
+.narrative-step {
+    height: 200vh;
+}
+
+/* - - GRID - - */
+
+/* - - POSITIONS - - */
+.el-sticky {
+    position: fixed;
+    top: var(--sp-xs);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+.sect-sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+}
+
+/* - - IMAGES - - */
+
+.ghost {
+    opacity: 0.4;
+    will-change: transform;
+    animation: ghostBreathe 2s ease-in-out infinite alternate;
+
+}
+
+@keyframes ghostBreathe {
+    0% {
+        transform:
+            translate3d(-6vw, 0, 0);
+    }
+
+    100% {
+        transform:
+            translate3d(6vw, -0.06vw, 0);
+    }
+}
+
+
+
+
+.brown-sphere {
+    width: 7vmax;
+    aspect-ratio: 1 / 1;
+    background-color: var(--brown);
+    border-radius: var(--radius-full);
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
