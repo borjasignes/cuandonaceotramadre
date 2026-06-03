@@ -179,7 +179,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 function shouldShowFullIntro() {
     const introLastSeen = localStorage.getItem("cnomIntroLastSeen");
     const now = Date.now();
-    const thirtyMinutes = 1 * 60 * 1000;
+    const thirtyMinutes = 30 * 60 * 1000;
 
     if (!introLastSeen) return true;
 
@@ -610,6 +610,8 @@ function initHeroAnimation(heroButtonLoop) {
         const heroPctMain = document.querySelector(".hero-pct");
         const heroBrownGradient = document.querySelector(".hero-brown-transition__gradient");
 
+        const heroBrownSolid = document.querySelector(".hero-brown-transition__color");
+
         let girlYToCenter = "-18vh";
         let desktopGradientScale = 3;
 
@@ -641,11 +643,19 @@ function initHeroAnimation(heroButtonLoop) {
             filter: "blur(7px)"
         });
 
+        gsap.set(heroBrownSolid, {
+            autoAlpha: 1,
+            yPercent: 100,
+        });
+
         // Estado inicial del degradado brown de salida del hero.
         if (heroBrownGradient) {
             gsap.set(heroBrownGradient, {
                 yPercent: 100,
                 autoAlpha: 1,
+                scaleX: 1.1,
+                scaleY: 1,
+                filter: "blur(0px)"
             });
         }
 
@@ -678,15 +688,21 @@ function initHeroAnimation(heroButtonLoop) {
                 start: "top top",
                 end: "bottom bottom",
                 scrub: 1.2,
-                //markers: true,
-                onUpdate: (self) => {             // ← AÑADIR DESDE AQUÍ
-                    if (self.progress >= 0.88 && self.direction === 1 && !self._hasSnapped) {
+                markers: true,
+
+                onUpdate: (self) => {
+                    if (self.progress >= 0.75 && self.direction === 1 && !self._hasSnapped) {
                         self._hasSnapped = true;
                         const narrativeTarget = document.querySelector('#narrative-step__1');
+
                         if (narrativeTarget) {
+                            const targetY = narrativeTarget.offsetTop + window.innerHeight * 0.35;//
+
                             gsap.to(window, {
-                                scrollTo: { y: narrativeTarget, offsetY: 0 },
-                                duration: 1.5,   // ← aquí controlas la velocidad en segundos
+                                scrollTo: {
+                                    y: targetY
+                                },
+                                duration: 2.5,
                                 ease: "power2.inOut"
                             });
                         }
@@ -694,7 +710,7 @@ function initHeroAnimation(heroButtonLoop) {
                     if (self.progress < 0.75) {
                         self._hasSnapped = false;  // reset si el usuario vuelve hacia arriba
                     }
-                }                                  // ← HASTA AQUÍ
+                },
             }
         });
 
@@ -754,11 +770,12 @@ function initHeroAnimation(heroButtonLoop) {
             }
         }, "<+=0.9");
 
+
         tl.to(heroTxtParagraphs, {
             autoAlpha: 1,
             y: 0,
             filter: "blur(0px)",
-            duration: 1.5,
+            duration: 1.4,
             ease: "power3.out",
             stagger: {
                 each: 0.15,
@@ -766,11 +783,12 @@ function initHeroAnimation(heroButtonLoop) {
             }
         }, "<+=0.6");
 
+
         let heroButtonDelayCall = null;
 
         tl.to(".btn-hero", {
             autoAlpha: 1,
-            duration: 1,
+            duration: 0.9,
             onStart: () => {
                 if (!heroButtonLoop) return;
 
@@ -798,15 +816,30 @@ function initHeroAnimation(heroButtonLoop) {
                     });
                 }
             }
-        }, "<+=0.8");
+        }, "<+=0.5");
+
+        tl.to({}, {
+            duration: 2
+        });
+
+        tl.to(heroBrownSolid, {
+            yPercent: 0,
+            duration: 2,
+        }, "<=0.3");
+
+
 
         // Degradado brown de salida del hero hacia la narrativa.
         if (heroBrownGradient) {
+
             tl.to(heroBrownGradient, {
                 yPercent: 0,
                 duration: 3,
-                ease: "none"
+                ease: "none",
+                filter: "blur(20px)",
+                // scaleY: 1.1,
             });
+
         }
     });
 }
@@ -1144,6 +1177,7 @@ function initNarrativeSequence() {
     // Step 01
     const nacerGraphics = sequence.querySelectorAll(".narrative-layer--01 .step--01__graphics");
     const nacerTxt = sequence.querySelector(".narrative-layer--01 .step--01__content .txt-block");
+    const nacerBgWhite = sequence.querySelector(".narrative-layer--01 .white-sphere")
 
     // Step 02
     const guionGraphics = sequence.querySelector(".narrative-layer--02 .step--02__graphics");
@@ -1209,8 +1243,15 @@ function initNarrativeSequence() {
 
     gsap.set(nacerGraphics, {
         transformOrigin: "50% 50%",
+        scale: 1,
         force3D: false
     });
+
+    gsap.set(nacerBgWhite, {
+        autoAlpha: 0,
+        filter: "blur(2px)"
+    });
+
     // Estado inicial layers
     gsap.set(guionLayer, {
         autoAlpha: 0
@@ -1270,7 +1311,7 @@ function initNarrativeSequence() {
 
     // Estado inicial STEP 6
     gsap.set([pasoFlor1, pasoFlor2, pasoFlor3, pasoFlor4, pasoFlor5], {
-        yPercent: 90
+        yPercent: 95
     });
 
     gsap.set(pasoContent, {
@@ -1350,16 +1391,21 @@ function initNarrativeSequence() {
     tl.addLabel("chapter01");
     tl.call(() => setHeaderTheme("grey"), null, "chapter01");
 
-    tl.to(nacerGraphics, {
-        scale: 10,
-        duration: 2
-    });
+    // tl.to(nacerGraphics, {
+    //     scale: 10,
+    //     duration: 2
+    // });
 
     tl.to(nacerTxt, {
         autoAlpha: 1,
         filter: "blur(0px)",
-        duration: 2
+        duration: 3
     }, "<+=0.3");
+
+    tl.to(nacerBgWhite, {
+        autoAlpha: 1,
+        duration: 0.1
+    }, "<=");
 
     tl.to({}, {
         duration: 2
@@ -1367,16 +1413,16 @@ function initNarrativeSequence() {
 
     //tl.addLabel("rest01");
 
-    tl.to(nacerGraphics, {
-        scale: 210,
-        duration: 3.5,
-        ease: "none"
+    tl.to(nacerBgWhite, {
+        scale: 30,
+        duration: 4,
+        ease: "sine.out"
     });
 
     tl.to(nacerTxt, {
         autoAlpha: 0,
         filter: "blur(20px)",
-        duration: 2
+        duration: 1
     }, "<+=0.1");
 
     // STEP 2 — ANIMACIÓN
@@ -1386,67 +1432,78 @@ function initNarrativeSequence() {
 
     tl.to(guionLayer, {
         autoAlpha: 1,
-        duration: 1.2,
+        duration: 0.7,
         ease: "sine.out"
-    }, "chapter02");
+    }, "<-=1");
+    // }, "chapter02");
 
-    tl.to(nacerLayer, {
-        autoAlpha: 0,
-        duration: 0.8
-    }, "chapter02+=0.4");
+
 
     tl.to(guionGraphics, {
         y: "25vh",
-        duration: 2.2
-    }, "<");
+        duration: 4,
+    }, "<-=0.1");
+
+    tl.addLabel("rest01");
 
     tl.to(guionContent, {
         autoAlpha: 1,
-        duration: 3,
+        duration: 4,
         filter: "blur(0px)"
     }, "<+=0.1");
 
-    tl.addLabel("rest01");
-    //tl.addLabel("rest02");
 
-    tl.to({}, {
-        duration: 2
-    });
+
+    // tl.addLabel("rest01");
+    // tl.addLabel("rest02");
+
+    // tl.to({}, {
+    //     duration: 1
+    // });
 
     tl.to(guionGraphics, {
         y: 0,
-        duration: 3,
+        duration: 2,
         scale: 1
     });
 
-    tl.to({}, {
-        duration: 2
-    });
+    // tl.to({}, {
+    //     duration: 2
+    // });
 
     tl.to(shuffledPixelParts, {
         autoAlpha: 1,
-        duration: 1,
+        duration: 0.05,
         stagger: 0.035,
         ease: "steps(1)"
-    }, "<+=0.3");
+    });
 
+    tl.addLabel("rest02");
     //tl.addLabel("rest03");
 
     tl.to({}, {
-        duration: 3
+        duration: 4
     });
+
 
     tl.to(pixelSvg, {
         x: 300,
-        duration: 3,
+        duration: 4,
         ease: "sine.inOut"
     });
 
 
     tl.to(guionImage, {
         x: -470,
-        duration: 3,
+        duration: 4,
         ease: "sine.inOut"
+    }, "<=");
+
+    tl.addLabel("rest03");
+
+    tl.to(nacerLayer, {
+        autoAlpha: 0,
+        duration: 0.1,
     }, "<=");
 
 
@@ -1491,16 +1548,16 @@ function initNarrativeSequence() {
     tl.to(pixelSvg, {
         x: () => getXToExitRight(pixelSvg),
         // x: 760,
-        duration: 2,
-        ease: "sine.inOut"
+        duration: 3.5,
+        ease: "power1.in",
     });
 
     // Flor desenfocada sale de pantalla izquierda
     tl.to(guionImage, {
         x: () => getXToExitLeft(guionImage),
         // x: -920,
-        duration: 2,
-        ease: "sine.inOut"
+        duration: 3.5,
+        ease: "power1.in",
     }, "<=");
 
 
@@ -1519,9 +1576,11 @@ function initNarrativeSequence() {
 
     tl.to(layer04, {
         autoAlpha: 1,
-        duration: 2,
+        duration: 3.3,
         ease: "sine.out"
-    });
+    }, "<-=1.2");
+
+    tl.addLabel("rest04");
 
     //tl.addLabel("rest05");
 
@@ -1549,7 +1608,7 @@ function initNarrativeSequence() {
     tl.to(juicioBrownSphere, {
         autoAlpha: 1,
         scale: 65,
-        duration: 3,
+        duration: 4,
         filter: "blur(2px)",
         ease: "sine.out"
     });
@@ -1557,8 +1616,8 @@ function initNarrativeSequence() {
     // Desaparece texto step 4
     tl.to(juicioContent, {
         autoAlpha: 0,
-        duration: 2,
-        filter: "blur(50px)"
+        duration: 1,
+        filter: "blur(15px)"
     }, "<+=0.1");
 
 
@@ -1568,19 +1627,21 @@ function initNarrativeSequence() {
 
     tl.to(layer05, {
         autoAlpha: 1,
-        duration: 0.1
-    });
+        duration: 0.5
+    }, "<-=1.7");
 
     tl.to(nombreGradientBtm, {
         scaleY: 1,
-        duration: 1
-    });
+        duration: 2
+    }, "<-=0.1");
 
     tl.to(nombreFlorGrupo, {
         yPercent: 0,
-        duration: 2,
+        duration: 5,
         ease: "sine.out"
     }, "<=+0.1");
+
+    tl.addLabel("rest05");
 
     tl.to(layer04, {
         autoAlpha: 0,
@@ -1591,9 +1652,9 @@ function initNarrativeSequence() {
         autoAlpha: 1,
         duration: 3,
         filter: "blur(0px)"
-    }, "<+=0.1");
+    }, "<-=0.2");
 
-    tl.addLabel("rest02");
+    // tl.addLabel("rest03");
     // tl.addLabel("rest07");
     // Pausa
     tl.to({}, {
@@ -1602,19 +1663,24 @@ function initNarrativeSequence() {
 
     tl.to(nombreGradientBg, {
         scaleY: 3,
-        duration: 6
+        duration: 8,
+        ease: "power4.in",
     });
 
     tl.to([nombreFlorHblur, nombreFlorMblur], {
         autoAlpha: 0,
-        duration: 6
+        duration: 8,
+        ease: "power4.in",
     }, "<=");
 
     //tl.addLabel("rest08");
     // Pausa
-    tl.to({}, {
-        duration: 3
-    });
+
+    tl.to(nombreContent, {
+        autoAlpha: 0,
+        duration: 3,
+        filter: "blur(15px)"
+    }, "<+=6.5");
 
 
     // STEP 6 — ANIMACIÓN
@@ -1626,53 +1692,48 @@ function initNarrativeSequence() {
         duration: 0.1
     }, "<=");
 
-    tl.to(pasoFlor1, {
-        yPercent: 0,
-        duration: 5,
-        ease: "sine.inOut"
-    });
+    tl.to(pasoContent, {
+        autoAlpha: 1,
+        filter: "blur(0px)",
+        duration: 3
+    }, "<-=0.4");
 
     tl.to(pasoFlor2, {
         yPercent: 0,
         duration: 5,
-        ease: "sine.inOut"
-    }, "<=+0.3");
-
-    tl.to(nombreContent, {
-        autoAlpha: 0,
-        duration: 5,
-        filter: "blur(20px)"
-    }, "<-=1");
+        ease: "power3.out",
+    });
 
     tl.to(pasoFlor3, {
         yPercent: 0,
         duration: 5,
-        ease: "sine.inOut"
-    }, "<=+0.3");
+        ease: "power3.out",
+    }, "<+=0.5");
 
     tl.to(pasoFlor4, {
         yPercent: 0,
         duration: 5,
-        ease: "sine.inOut"
-    }, "<=+0.3");
+        ease: "power3.out",
+    }, "<+=0.7");
+
+    tl.to(pasoFlor1, {
+        yPercent: 0,
+        duration: 5,
+        ease: "power3.out",
+    }, "<+=0.7");
+
 
     tl.to(pasoFlor5, {
         yPercent: 0,
-        duration: 5,
-        ease: "sine.inOut"
-    }, "<=+0.3");
-
-    tl.to(pasoContent, {
-        autoAlpha: 1,
-        filter: "blur(0px)",
-        duration: 2
-    }, "<=-1");
+        duration: 6,
+        ease: "power3.out",
+    }, "<+=0.5");
 
     tl.to(pasoBtn, {
         autoAlpha: 1,
         filter: "blur(0px)",
-        duration: 2
-    });
+        duration: 3
+    }, "<+=0.5");
 
     // Pausa
     //tl.addLabel("rest09");
