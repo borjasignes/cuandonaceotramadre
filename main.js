@@ -688,7 +688,7 @@ function initHeroAnimation(heroButtonLoop) {
                 start: "top top",
                 end: "bottom bottom",
                 scrub: 1.2,
-                markers: true,
+                //markers: true,
 
                 onUpdate: (self) => {
                     if (self.progress >= 0.75 && self.direction === 1 && !self._hasSnapped) {
