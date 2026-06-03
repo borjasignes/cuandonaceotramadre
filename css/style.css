@@ -441,12 +441,32 @@ body.is-intro-active .hero-intro-messages {
     background: linear-gradient(to top,
             var(--brown) 0%,
             var(--brown) 70%,
-            transparent 100%);
+            transparent 80%);
 
     opacity: 0;
     transform-origin: bottom center;
     will-change: transform;
 }
+
+.hero-brown-transition__color {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+
+    height: 10svh;
+
+    background: linear-gradient(to top,
+            var(--brown) 0%,
+            var(--brown) 50%,
+            transparent 100%);
+    opacity: 0;
+}
+
+
+
+
+
 
 /* - - ESTADOS - - */
 .hero-state {
@@ -606,12 +626,12 @@ body.is-intro-active .hero-intro-messages {
 
     pointer-events: none;
 
-    .brown-sphere__hover {
+    /* .brown-sphere__hover {
         position: fixed;
         left: 50%;
         top: 50%;
         z-index: 2;
-    }
+    } */
 
     .brown-sphere__transition {
         position: absolute;
@@ -741,11 +761,32 @@ body.is-intro-active .hero-intro-messages {
 
     .step--01__graphics {
         position: absolute;
-        width: 1%;
+        width: 10%;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
         transform-origin: center center;
+        pointer-events: none;
+    }
+
+    .white-sphere {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+
+        /* width: 2vmax; */
+        width: 4vmax;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+
+        background-color: var(--white);
+        filter: blur(2px);
+
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(-50%, -50%);
+        transform-origin: center;
+
         pointer-events: none;
     }
 
