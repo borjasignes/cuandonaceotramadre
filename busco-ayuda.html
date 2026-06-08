@@ -7,150 +7,183 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Cuando Nace Otra Madre | Busco Ayuda</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Cnom" />
+    <link rel="manifest" href="assets/favicon/site.webmanifest" />
+
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body data-page="busco-ayuda">
+    <div class="page-transition-bg"></div>
 
     <div data-include="components/header.html"></div>
 
-    <main>
-        <!------  H E A D E R  ------>
-        <section class="">
-            <div class="wrap repo_hdr">
-                <h2 class="hf-l">Un espacio para empezar a hablarlo</h2>
-                <div class="txt-block">
-                    <p>Hemos reunido una selección de psicólogas perinatales colaboradoras, revisadas por la plataforma,
-                        para
-                        que
-                        puedas encontrar apoyo especializado online o presencial. </p>
-                    <p>Puedes escribirles o solicitar una primera llamada sin coste: no es una consulta terapéutica,
-                        sino una
-                        valoración inicial para orientarte sobre si necesitas terapia o realizar una evaluación clínica.
-                    </p>
+    <main id="swup" class="transition-fade" data-page="busco-ayuda">
+        <div class="repo">
+            <!------  H E A D E R  ------>
+            <section class="">
+                <div class="wrap repo_hdr">
+                    <h2 class="hf-l two-lines-title">
+                        <span class="two-lines-title-line">Un espacio para</span>
+                        <span class="two-lines-title-line">empezar a hablarlo</span>
+                    </h2>
+                    <div class="txt-block">
+                        <p>Hemos reunido una selección de psicólogas perinatales colaboradoras, revisadas por la
+                            plataforma,
+                            para
+                            que
+                            puedas encontrar apoyo especializado online o presencial. </p>
+                        <p>Puedes escribirles o solicitar una primera llamada sin coste: no es una consulta terapéutica,
+                            sino una
+                            valoración inicial para orientarte sobre si necesitas terapia o realizar una evaluación
+                            clínica.
+                        </p>
+                    </div>
                 </div>
+            </section>
+
+            <!------  C O N T A C T S  ------>
+
+            <section class="wrap repo_contacts">
+                <ul class="repo_contacts_list">
+
+                    <!-- MARTA ZARAGOZÁ -->
+                    <li class="repo_contacts_row is-active">
+                        <figure class="repo_contacts_row_psico">
+                            <picture class="repo_contacts_row_img repo_contacts_row_img--base">
+
+                                <!-- imagen base -->
+                                <source srcset="assets/img/repository/marta-zaragoza-ps-peri-1.avif" type="image/avif">
+                                <source srcset="assets/img/repository/marta-zaragoza-ps-peri-1.webp" type="image/webp">
+                                <img src="assets/img/repository/marta-zaragoza-ps-peri-1.jpg"
+                                    alt="Retrato de Marta Zaragozá">
+                            </picture>
+
+                            <!-- imagen hover -->
+                            <picture class="repo_contacts_row_img repo_contacts_row_img--hover">
+                                <source srcset="assets/img/repository/marta-zaragoza-ps-peri-2.avif" type="image/avif">
+                                <source srcset="assets/img/repository/marta-zaragoza-ps-peri-2.webp" type="image/webp">
+                                <img src="assets/img/repository/marta-zaragoza-ps-peri-2.jpg"
+                                    alt="Retrato de Marta Zaragozá">
+                            </picture>
+
+                        </figure>
+
+                        <div class="repo_contacts_info">
+                            <p class="repo_contacts_row_name">Marta Zaragozá</p>
+                            <p class="repo_contacts_row_ubi">Valencia</p>
+                            <p class="repo_contacts_row_dispo">Online / Presencial</p>
+                            <a class="repo_contacts_row_tel" href="tel:+34661363756">llamar</a>
+                        </div>
+                    </li>
+
+                    <!-- 02. AMPARO SOLER -->
+                    <li class="repo_contacts_row">
+                        <figure class="repo_contacts_row_psico">
+                            <picture class="repo_contacts_row_img repo_contacts_row_img--base">
+
+                                <!-- imagen base -->
+                                <source srcset="assets/img/repository/amparo-soler-ps-peri-1.avif" type="image/avif">
+                                <source srcset="assets/img/repository/amparo-soler-ps-peri-1.webp" type="image/webp">
+                                <img src="assets/img/repository/amparo-soler-ps-peri-1.jpg"
+                                    alt="Retrato de Marta Zaragozá">
+                            </picture>
+
+                            <!-- imagen hover -->
+                            <picture class="repo_contacts_row_img repo_contacts_row_img--hover">
+                                <source srcset="assets/img/repository/amparo-soler-ps-peri-2.avif" type="image/avif">
+                                <source srcset="assets/img/repository/amparo-soler-ps-peri-2.webp" type="image/webp">
+                                <img src="assets/img/repository/amparo-soler-ps-peri-2.jpg"
+                                    alt="Retrato de Marta Zaragozá">
+                            </picture>
+
+
+                        </figure>
+
+                        <div class="repo_contacts_info">
+                            <p class="repo_contacts_row_name">Amparo Soler</p>
+                            <p class="repo_contacts_row_ubi">Valencia</p>
+                            <p class="repo_contacts_row_dispo">Online</p>
+                            <a class="repo_contacts_row_tel" href="tel:+34661363756">llamar</a>
+                        </div>
+                    </li>
+
+
+
+                    <!-- 03. LAIA FERRER -->
+                    <li class="repo_contacts_row">
+                        <figure class="repo_contacts_row_psico">
+                            <picture class="repo_contacts_row_img repo_contacts_row_img--base">
+
+                                <!-- imagen base -->
+                                <source srcset="assets/img/repository/laia-ferrer-ps-peri-1.avif" type="image/avif">
+                                <source srcset="assets/img/repository/laia-ferrer-ps-peri-1.webp" type="image/webp">
+                                <img src="assets/img/repository/laia-ferrer-ps-peri-1.jpg"
+                                    alt="Retrato de Marta Zaragozá">
+                            </picture>
+
+                            <!-- imagen hover -->
+                            <picture class="repo_contacts_row_img repo_contacts_row_img--hover">
+                                <source srcset="assets/img/repository/laia-ferrer-ps-peri-2.avif" type="image/avif">
+                                <source srcset="assets/img/repository/laia-ferrer-ps-peri-2.webp" type="image/webp">
+                                <img src="assets/img/repository/laia-ferrer-ps-peri-2.jpg"
+                                    alt="Retrato de Marta Zaragozá">
+                            </picture>
+                        </figure>
+
+                        <div class="repo_contacts_info">
+                            <p class="repo_contacts_row_name">Laia Ferrer</p>
+                            <p class="repo_contacts_row_ubi">Barcelona</p>
+                            <p class="repo_contacts_row_dispo">Presencial</p>
+                            <a class="repo_contacts_row_tel" href="tel:+34661363756">llamar</a>
+                        </div>
+                    </li>
+
+
+                    <!-- 04. MACARENA ROMERO -->
+                    <li class="repo_contacts_row">
+                        <figure class="repo_contacts_row_psico">
+                            <picture class="repo_contacts_row_img repo_contacts_row_img--base">
+
+                                <!-- imagen base -->
+                                <source srcset="assets/img/repository/macarena-romero-ps-peri-1.avif" type="image/avif">
+                                <source srcset="assets/img/repository/macarena-romero-ps-peri-1.webp" type="image/webp">
+                                <img src="assets/img/repository/macarena-romero-ps-peri-1.jpg"
+                                    alt="Retrato de Marta Zaragozá">
+                            </picture>
+
+                            <!-- imagen hover -->
+                            <picture class="repo_contacts_row_img repo_contacts_row_img--hover">
+                                <source srcset="assets/img/repository/macarena-romero-ps-peri-2.avif" type="image/avif">
+                                <source srcset="assets/img/repository/macarena-romero-ps-peri-2.webp" type="image/webp">
+                                <img src="assets/img/repository/macarena-romero-ps-peri-2.jpg"
+                                    alt="Retrato de Marta Zaragozá">
+                            </picture>
+
+
+                        </figure>
+
+                        <div class="repo_contacts_info">
+                            <p class="repo_contacts_row_name">Macarena Romero</p>
+                            <p class="repo_contacts_row_ubi">Sevilla</p>
+                            <p class="repo_contacts_row_dispo">Presencial</p>
+                            <a class="repo_contacts_row_tel" href="tel:+34661363756">llamar</a>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <div class="faqs_gradient">
+                <div class="faqs_gradient__yellow"></div>
+                <div class="faqs_gradient__brown"></div>
+                <div class="faqs_gradient__solid"></div>
             </div>
-        </section>
-
-        <!------  C O N T A C T S  ------>
-
-        <section class="wrap repo_contacts">
-            <ul class="repo_contacts_list">
-
-                <!-- MARTA ZARAGOZÁ -->
-                <li class="repo_contacts_row is-active">
-                    <figure class="repo_contacts_row_psico">
-                        <picture class="repo_contacts_row_img repo_contacts_row_img--base">
-
-                            <!-- imagen base -->
-                            <source srcset="assets/img/repository/marta-zaragoza-ps-peri-1.avif" type="image/avif">
-                            <source srcset="assets/img/repository/marta-zaragoza-ps-peri-1.webp" type="image/webp">
-                            <img src="assets/img/repository/marta-zaragoza-ps-peri-1.jpg"
-                                alt="Retrato de Marta Zaragozá">
-                        </picture>
-
-                        <!-- imagen hover -->
-                        <picture class="repo_contacts_row_img repo_contacts_row_img--hover">
-                            <source srcset="assets/img/repository/marta-zaragoza-ps-peri-2.avif" type="image/avif">
-                            <source srcset="assets/img/repository/marta-zaragoza-ps-peri-2.webp" type="image/webp">
-                            <img src="assets/img/repository/marta-zaragoza-ps-peri-2.jpg"
-                                alt="Retrato de Marta Zaragozá">
-                        </picture>
-
-                    </figure>
-
-                    <p class="repo_contacts_row_name">Marta Zaragozá</p>
-                    <p class="repo_contacts_row_ubi">Valencia</p>
-                    <p class="repo_contacts_row_dispo">Online / Presencial</p>
-                    <a class="repo_contacts_row_tel" href="tel:+34661363756">llamar</a>
-
-                </li>
-
-                <!-- 02. AMPARO SOLER -->
-                <li class="repo_contacts_row">
-                    <figure class="repo_contacts_row_psico">
-                        <picture class="repo_contacts_row_img repo_contacts_row_img--base">
-
-                            <!-- imagen base -->
-                            <source srcset="assets/img/repository/amparo-soler-ps-peri-1.avif" type="image/avif">
-                            <source srcset="assets/img/repository/amparo-soler-ps-peri-1.webp" type="image/webp">
-                            <img src="assets/img/repository/amparo-soler-ps-peri-1.jpg" alt="Retrato de Marta Zaragozá">
-                        </picture>
-
-                        <!-- imagen hover -->
-                        <picture class="repo_contacts_row_img repo_contacts_row_img--hover">
-                            <source srcset="assets/img/repository/amparo-soler-ps-peri-2.avif" type="image/avif">
-                            <source srcset="assets/img/repository/amparo-soler-ps-peri-2.webp" type="image/webp">
-                            <img src="assets/img/repository/amparo-soler-ps-peri-2.jpg" alt="Retrato de Marta Zaragozá">
-                        </picture>
-
-
-                    </figure>
-
-                    <p class="repo_contacts_row_name">Amparo Soler</p>
-                    <p class="repo_contacts_row_ubi">Valencia</p>
-                    <p class="repo_contacts_row_dispo">Online</p>
-                    <a class="repo_contacts_row_tel" href="tel:+34661363756">llamar</a>
-                </li>
-
-
-                <!-- 03. LAIA FERRER -->
-                <li class="repo_contacts_row">
-                    <figure class="repo_contacts_row_psico">
-                        <picture class="repo_contacts_row_img repo_contacts_row_img--base">
-
-                            <!-- imagen base -->
-                            <source srcset="assets/img/repository/laia-ferrer-ps-peri-1.avif" type="image/avif">
-                            <source srcset="assets/img/repository/laia-ferrer-ps-peri-1.webp" type="image/webp">
-                            <img src="assets/img/repository/laia-ferrer-ps-peri-1.jpg" alt="Retrato de Marta Zaragozá">
-                        </picture>
-
-                        <!-- imagen hover -->
-                        <picture class="repo_contacts_row_img repo_contacts_row_img--hover">
-                            <source srcset="assets/img/repository/laia-ferrer-ps-peri-2.avif" type="image/avif">
-                            <source srcset="assets/img/repository/laia-ferrer-ps-peri-2.webp" type="image/webp">
-                            <img src="assets/img/repository/laia-ferrer-ps-peri-2.jpg" alt="Retrato de Marta Zaragozá">
-                        </picture>
-                    </figure>
-
-                    <p class="repo_contacts_row_name">Laia Ferrer</p>
-                    <p class="repo_contacts_row_ubi">Barcelona</p>
-                    <p class="repo_contacts_row_dispo">Presencial</p>
-                    <a class="repo_contacts_row_tel" href="tel:+34661363756">llamar</a>
-                </li>
-
-
-                <!-- 04. MACARENA ROMERO -->
-                <li class="repo_contacts_row">
-                    <figure class="repo_contacts_row_psico">
-                        <picture class="repo_contacts_row_img repo_contacts_row_img--base">
-
-                            <!-- imagen base -->
-                            <source srcset="assets/img/repository/macarena-romero-ps-peri-1.avif" type="image/avif">
-                            <source srcset="assets/img/repository/macarena-romero-ps-peri-1.webp" type="image/webp">
-                            <img src="assets/img/repository/macarena-romero-ps-peri-1.jpg"
-                                alt="Retrato de Marta Zaragozá">
-                        </picture>
-
-                        <!-- imagen hover -->
-                        <picture class="repo_contacts_row_img repo_contacts_row_img--hover">
-                            <source srcset="assets/img/repository/macarena-romero-ps-peri-2.avif" type="image/avif">
-                            <source srcset="assets/img/repository/macarena-romero-ps-peri-2.webp" type="image/webp">
-                            <img src="assets/img/repository/macarena-romero-ps-peri-2.jpg"
-                                alt="Retrato de Marta Zaragozá">
-                        </picture>
-
-
-                    </figure>
-
-                    <p class="repo_contacts_row_name">Macarena Romero</p>
-                    <p class="repo_contacts_row_ubi">Sevilla</p>
-                    <p class="repo_contacts_row_dispo">Presencial</p>
-                    <a class="repo_contacts_row_tel" href="tel:+34661363756">llamar</a>
-                </li>
-            </ul>
-        </section>
+        </div>
     </main>
 
     <!------  ░░░░  N O I S E  ░░░░  ------>
@@ -163,6 +196,8 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
+    <script src="https://unpkg.com/swup@4/dist/Swup.umd.js"></script>
+
     <script type="module" src="js/main.js"></script>
 </body>
 

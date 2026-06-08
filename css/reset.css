@@ -66,6 +66,26 @@ h6 {
     overflow-wrap: break-word;
 }
 
+
+/* Quitar flechita en el summary */
+
+.dropdown_faqs summary {
+    list-style: none;
+    list-style-type: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.dropdown_faqs summary::-webkit-details-marker {
+    display: none;
+}
+
+.dropdown_faqs summary::marker {
+    content: "";
+    font-size: 0;
+}
+
 /* Mejora la accesibilidad desactivando animaciones si el usuario lo prefiere */
 @media (prefers-reduced-motion: reduce) {
 

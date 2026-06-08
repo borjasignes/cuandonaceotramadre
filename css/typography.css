@@ -36,16 +36,16 @@
     /* - - FONT SIZE - - */
 
     /* Body Font */
-    --bf-base: clamp(18px, 1.25vw, 22px);
+    --bf-base: clamp(18px, 1.25vw, 26px);
     --bf-s: 16px;
-    --bf-xs: clamp(14px, 0.9375vw, 18px);
+    --bf-xs: clamp(14px, 0.9375vw, 22px);
     --bf-2xs: 12px;
 
     /* Heading Font */
-    --hf-xl: clamp(129px, 9.9vw, 200px);
+    --hf-xl: clamp(129px, 9.9vw, 260px);
     --hf-xl-m: clamp(80px, 14.1vw, 129px);
-    --hf-l: clamp(80px, calc(8.33vw - 40px), 120px);
-    --hf-l-m: 58px;
+    --hf-l: clamp(80px, calc(8.33vw - 40px), 134px);
+    --hf-l-m: clamp(51px, calc(35.52px + 3.97vw), 66px);
     --hf-base: 64px;
     --hf-s: 58px;
     --hf-xs: 50px;

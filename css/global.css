@@ -5,9 +5,9 @@
     color: var(--green);
 }
 
-html {
+/* html {
     scroll-behavior: smooth;
-}
+} */
 
 body.is-scroll-locked {
     overflow: hidden;
@@ -16,6 +16,53 @@ body.is-scroll-locked {
 /* @view-transition {
     navigation: auto;
 } */
+
+
+/* - - TRANSICIÓN ENTRE PÁGINAS - - */
+.page-transition-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-color: var(--green);
+    pointer-events: none;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: none;
+}
+
+html.is-page-transitioning .page-transition-bg {
+    opacity: 1;
+    visibility: visible;
+}
+
+#swup {
+    position: relative;
+    z-index: 1;
+    min-height: 100dvh;
+}
+
+html.is-page-transitioning #swup {
+    background-color: var(--green);
+}
+
+.transition-fade {
+    opacity: 1;
+    transition: opacity 0.75s ease;
+}
+
+html.is-animating .transition-fade {
+    opacity: 0;
+}
+
+
+body[data-page="herramienta"] #swup,
+#swup[data-page="herramienta"] {
+    min-height: 100dvh;
+    background-color: var(--purple);
+}
+
 
 /* - - COLORES - - */
 
@@ -32,10 +79,18 @@ body.is-scroll-locked {
 
 html,
 body {
-    background-color: var(--green);
-
+    background-color: black;
 }
 
+
+
+body[data-page="busco-ayuda"] {
+    background-color: black;
+}
+
+body[data-page="busco-ayuda"] .repo {
+    background-color: var(--green);
+}
 
 /* - - ESPACIOS - - */
 .sp-xs {
@@ -140,7 +195,13 @@ body {
 
 .hf-base {
     font-family: var(--heading-font);
-    font-size: var(--hf-base);
+    font-size: var(--hf-2xs);
+    line-height: 1;
+
+    @media (min-width:1280px) {
+        font-size: var(--hf-base);
+        line-height: 0.9;
+    }
 }
 
 
@@ -195,9 +256,53 @@ body {
     @media(min-width:1280px) {
         gap: var(--sp-s);
         text-align: center;
+
+    }
+}
+
+.two-lines-title {
+    display: block;
+}
+
+.two-lines-title-line {
+    display: block;
+}
+
+
+
+.step--01__content .txt-block,
+.step--02__content .txt-block,
+.step--03__content .txt-block__center,
+.step--04__content .txt-block__center,
+.step--05__content .txt-block,
+.step--06__content .txt-block {
+
+    @media (min-width:768px) {
+        width: 70%;
+    }
+}
+
+.step--03__content .txt-block__center,
+.step--04__content .txt-block__center {
+
+    @media (min-width:1280px) {
         width: 40%;
     }
 }
+
+/* .step--01__content,
+.step--02__content,
+.step--05__content,
+.step--06__content {
+
+    @media (min-width:768px) {
+        justify-content: flex-start;
+    }
+
+    @media (min-width:1280px) {}
+} */
+
+
 
 /* - - LAYOUT - - */
 .wrap {
@@ -224,7 +329,7 @@ body {
 .sect-sticky {
     position: sticky;
     top: 0;
-    height: 100svh;
+    height: 100dvh;
     overflow: hidden;
 }
 

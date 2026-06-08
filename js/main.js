@@ -22,9 +22,92 @@ function initFaqsMore() {
 
     if (!moreButton || !extraFaqs) return;
 
+    const extraFaqItems = extraFaqs.querySelectorAll(".dropdown_faqs");
+
     moreButton.addEventListener("click", () => {
+        moreButton.disabled = true;
+
+        const buttonHeight = moreButton.offsetHeight;
+        const buttonMarginTop = gsap.getProperty(moreButton, "marginTop");
+
+        // 1. Preparar botón para que pueda colapsar sin salto
+        gsap.set(moreButton, {
+            height: buttonHeight,
+            marginTop: buttonMarginTop,
+            overflow: "hidden"
+        });
+
+        // 2. Mostrar el bloque extra, pero sin ocupar espacio visual todavía
         extraFaqs.hidden = false;
-        moreButton.hidden = true;
+
+        gsap.set(extraFaqs, {
+            height: 0,
+            marginTop: 0,
+            overflow: "hidden",
+            autoAlpha: 1
+        });
+
+        gsap.set(extraFaqItems, {
+            autoAlpha: 0,
+            y: 24,
+            filter: "blur(10px)"
+        });
+
+        const extraFaqsHeight = extraFaqs.scrollHeight;
+
+        const tl = gsap.timeline({
+            onComplete: () => {
+                moreButton.hidden = true;
+
+                gsap.set(extraFaqs, {
+                    height: "auto",
+                    overflow: "visible"
+                });
+
+                ScrollTrigger.refresh();
+            }
+        });
+
+        // 3. Sale visualmente el botón
+        tl.to(moreButton, {
+            autoAlpha: 0,
+            y: 18,
+            filter: "blur(8px)",
+            duration: 0.45,
+            ease: "power3.out"
+        });
+
+        // 4. El espacio del botón desaparece suavemente
+        tl.to(moreButton, {
+            height: 0,
+            marginTop: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            borderWidth: 0,
+            duration: 0.45,
+            ease: "power2.inOut"
+        }, "<+=0.1");
+
+        // 5. Aparece el espacio de las nuevas FAQs al mismo tiempo
+        tl.to(extraFaqs, {
+            height: extraFaqsHeight,
+            marginTop: "var(--sp-s)",
+            duration: 0.75,
+            ease: "power2.inOut"
+        }, "<");
+
+        // 6. Entran las nuevas FAQs
+        tl.to(extraFaqItems, {
+            autoAlpha: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 1,
+            ease: "power3.out",
+            stagger: {
+                each: 0.08,
+                from: "start"
+            }
+        }, "<+=0.2");
     });
 }
 
@@ -130,8 +213,8 @@ function initFaqsAccordion() {
             gsap.to(answer, {
                 height: answerHeight,
                 autoAlpha: 1,
-                duration: 1.2,
-                ease: "power3.out"
+                duration: 0.65,
+                ease: "power2.inOut"
             });
 
             if (iconVertical) {
@@ -172,6 +255,9 @@ function shuffleArray(array) {
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
+// ScrollTrigger.normalizeScroll(true);
+
+
 
 
 // HERO — LOAD INICIAL 30' MIN ESPERA
@@ -190,7 +276,27 @@ function saveIntroSeenTime() {
     localStorage.setItem("cnomIntroLastSeen", Date.now());
 }
 
+// RESIZE — RECÁLCULO SEGURO
 
+function initResizeRefresh() {
+    let resizeTimer;
+    let lastWidth = window.innerWidth;
+
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+
+        resizeTimer = setTimeout(() => {
+            const currentWidth = window.innerWidth;
+
+            // Evita refrescar por cambios de altura en móvil
+            if (currentWidth === lastWidth) return;
+
+            lastWidth = currentWidth;
+
+            ScrollTrigger.refresh(true);
+        }, 250);
+    });
+}
 
 // HERO — LOAD INICIAL
 
@@ -214,9 +320,11 @@ function initHeroIntroMessages() {
     if (!introMessages || !introMessage01 || !introMessage02 || !introSource || !introProgress || !heroH1) return;
 
     const showFullIntro = shouldShowFullIntro();
+    const shouldAnimateHeader = !isSwupNavigation;
 
     const heroH1Split = new SplitText(heroH1, {
-        type: "chars",
+        type: "words,chars",
+        wordsClass: "word",
         charsClass: "char"
     });
 
@@ -315,7 +423,8 @@ function initHeroIntroMessages() {
     });
 
     gsap.set([headerLogo, headerCenter, headerRight], {
-        autoAlpha: 0
+        autoAlpha: shouldAnimateHeader ? 0 : 1,
+        y: shouldAnimateHeader ? 0 : 0
     });
 
     const progressCounter = {
@@ -381,7 +490,7 @@ function initHeroIntroMessages() {
 
         // Pausa mensaje 1
         tl.to({}, {
-            duration: 0.2
+            duration: 3
         });
 
         // Sale mensaje 1 por líneas
@@ -389,7 +498,7 @@ function initHeroIntroMessages() {
             autoAlpha: 0,
             y: 18,
             filter: "blur(10px)",
-            duration: 1,
+            duration: 1.5,
             ease: "power3.out",
             stagger: {
                 each: 0.08,
@@ -413,7 +522,7 @@ function initHeroIntroMessages() {
         // Anima porcentaje 50 → 100
         tl.to(progressCounter, {
             value: 100,
-            duration: 1.8,
+            duration: 10.2,
             ease: "slow(0.7,0.7,false)",
             onUpdate: () => {
                 introProgress.textContent = `${Math.round(progressCounter.value)}%`;
@@ -421,22 +530,26 @@ function initHeroIntroMessages() {
         }, "<");
 
         // Pausa mensaje 2
-        tl.to({}, {
-            duration: 2.5
-        });
+        // tl.to({}, {
+        //     duration: 2.8
+        // }, "<");
 
         // Primero desaparece la parte social / silenciada
         tl.to(introMessage02SecondarySplit.words, {
             autoAlpha: 0,
             y: 18,
-            filter: "blur(10px)",
-            duration: 1,
+            filter: "blur(15px)",
+            duration: 2.3,
             ease: "power3.out",
             stagger: {
-                each: 0.08,
+                each: 0.015,
                 from: "start"
             }
-        });
+        }, "<+=7");
+
+        // tl.to({}, {
+        //     duration: 1
+        // },);
 
         // Sale fuente y porcentaje
         tl.to([introSourceSplit.lines, introProgress], {
@@ -446,15 +559,7 @@ function initHeroIntroMessages() {
             duration: 0.8,
             ease: "power3.out",
             stagger: 0.04
-        }, "<+=0.2");
-
-        tl.to({}, {
-            duration: 0.1
-        });
-
-        tl.to({}, {
-            duration: 0.1
-        });
+        }, "<+=2.5");
 
         // Después desaparece la idea principal
         tl.to(introMessage02MainSplit.words, {
@@ -503,8 +608,8 @@ function initHeroIntroMessages() {
     });
 
     tl.set([headerLogo, headerCenter, headerRight], {
-        autoAlpha: 0,
-        y: -8
+        autoAlpha: shouldAnimateHeader ? 0 : 1,
+        y: shouldAnimateHeader ? -8 : 0
     });
 
     tl.set(heroIntro, {
@@ -541,17 +646,23 @@ function initHeroIntroMessages() {
     });
 
     // 2. Aparece menú
-    tl.to([headerLogo, headerCenter, headerRight], {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.9,
-        ease: "power3.out",
-        stagger: {
-            each: 0.16,
-            from: "start"
-        }
-    }, "<+=0.45");
-
+    if (shouldAnimateHeader) {
+        tl.to([headerLogo, headerCenter, headerRight], {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            stagger: {
+                each: 0.16,
+                from: "start"
+            }
+        }, "<+=0.45");
+    } else {
+        tl.set([headerLogo, headerCenter, headerRight], {
+            autoAlpha: 1,
+            y: 0
+        }, "<+=0.45");
+    }
     // 3. Aparece texto inferior derecho
     tl.to(heroIntro, {
         autoAlpha: 1,
@@ -577,7 +688,7 @@ function initHeroIntroMessages() {
 
 // HERO - ANIMACIÓN PRINCIPAL
 
-function initHeroAnimation(heroButtonLoop) {
+function initHeroAnimation() {
     const hero = document.querySelector(".hero");
 
     if (!hero) return;
@@ -610,7 +721,8 @@ function initHeroAnimation(heroButtonLoop) {
         const heroPctMain = document.querySelector(".hero-pct");
         const heroBrownGradient = document.querySelector(".hero-brown-transition__gradient");
 
-        const heroBrownSolid = document.querySelector(".hero-brown-transition__color");
+        const heroPurpleGradient = document.querySelector(".hero-purple-transition__color");
+        const heroBrownSolid = document.querySelector(".hero-brown-transition__solid");
 
         let girlYToCenter = "-18vh";
         let desktopGradientScale = 3;
@@ -643,9 +755,14 @@ function initHeroAnimation(heroButtonLoop) {
             filter: "blur(7px)"
         });
 
-        gsap.set(heroBrownSolid, {
+        gsap.set(heroPurpleGradient, {
             autoAlpha: 1,
             yPercent: 100,
+        });
+
+        gsap.set(heroBrownSolid, {
+            autoAlpha: 1,
+            scaleY: 0,
         });
 
         // Estado inicial del degradado brown de salida del hero.
@@ -653,7 +770,7 @@ function initHeroAnimation(heroButtonLoop) {
             gsap.set(heroBrownGradient, {
                 yPercent: 100,
                 autoAlpha: 1,
-                scaleX: 1.1,
+                scaleX: 1.2,
                 scaleY: 1,
                 filter: "blur(0px)"
             });
@@ -688,15 +805,67 @@ function initHeroAnimation(heroButtonLoop) {
                 start: "top top",
                 end: "bottom bottom",
                 scrub: 1.2,
-                markers: true,
+                // markers: true,
 
-                onUpdate: (self) => {
+                snap: isDesktop ? {
+                    snapTo: (progress, self) => {
+                        const duration = tl.duration();
+
+                        if (!duration) return progress;
+
+                        const snapPoints = [
+                            tl.labels.heroRest01 / duration,
+                            tl.labels.heroRest02 / duration
+                        ].filter((point) => Number.isFinite(point));
+
+                        if (!snapPoints.length) return progress;
+
+                        const direction = self.direction;
+
+                        const previousPoint = [...snapPoints]
+                            .reverse()
+                            .find((point) => point < progress);
+
+                        const nextPoint = snapPoints
+                            .find((point) => point > progress);
+
+                        const fallbackPoint = gsap.utils.snap(snapPoints, progress);
+
+                        const targetPoint = direction > 0
+                            ? nextPoint ?? fallbackPoint
+                            : previousPoint ?? fallbackPoint;
+
+                        const distance = Math.abs(targetPoint - progress);
+
+                        const maxSnapDistanceForward = 0.55;
+                        const maxSnapDistanceBackward = 0.35;
+
+                        const maxSnapDistance = direction > 0
+                            ? maxSnapDistanceForward
+                            : maxSnapDistanceBackward;
+
+                        if (distance > maxSnapDistance) {
+                            return progress;
+                        }
+
+                        return targetPoint;
+                    },
+                    duration: {
+                        min: 1.4,
+                        max: 2.4
+                    },
+                    delay: 0.04,
+                    ease: "sine.inOut"
+                } : false,
+
+                onUpdate: isDesktop ? (self) => {
                     if (self.progress >= 0.75 && self.direction === 1 && !self._hasSnapped) {
                         self._hasSnapped = true;
-                        const narrativeTarget = document.querySelector('#narrative-step__1');
+
+                        const narrativeTarget = document.querySelector("#narrative-step__1");
 
                         if (narrativeTarget) {
-                            const targetY = narrativeTarget.offsetTop + window.innerHeight * 0.35;//
+                            const targetY = narrativeTarget.offsetTop + window.innerHeight * 0.62;
 
                             gsap.to(window, {
                                 scrollTo: {
@@ -707,12 +876,15 @@ function initHeroAnimation(heroButtonLoop) {
                             });
                         }
                     }
+
                     if (self.progress < 0.75) {
-                        self._hasSnapped = false;  // reset si el usuario vuelve hacia arriba
+                        self._hasSnapped = false;
                     }
-                },
+                } : null
             }
         });
+
+        tl.addLabel("heroRest01");
 
         tl.to(heroH1Chars, {
             autoAlpha: 0,
@@ -788,46 +960,31 @@ function initHeroAnimation(heroButtonLoop) {
 
         tl.to(".btn-hero", {
             autoAlpha: 1,
-            duration: 0.9,
-            onStart: () => {
-                if (!heroButtonLoop) return;
-
-                heroButtonLoop.pause(0);
-
-                if (heroButtonDelayCall) {
-                    heroButtonDelayCall.kill();
-                }
-
-                heroButtonDelayCall = gsap.delayedCall(0.9, () => {
-                    heroButtonLoop.restart();
-                });
-            },
-            onReverseComplete: () => {
-                if (heroButtonDelayCall) {
-                    heroButtonDelayCall.kill();
-                    heroButtonDelayCall = null;
-                }
-
-                if (heroButtonLoop) {
-                    heroButtonLoop.pause(0);
-
-                    gsap.set(".btn-hero", {
-                        "--btn-border-scale": 1
-                    });
-                }
-            }
+            duration: 0.9
         }, "<+=0.5");
+
+        tl.addLabel("heroRest02");
 
         tl.to({}, {
             duration: 2
         });
 
-        tl.to(heroBrownSolid, {
+        tl.to(heroPurpleGradient, {
             yPercent: 0,
+            scaleY: 0.5,
             duration: 2,
+            ease: "power4.inOut",
         }, "<=0.3");
 
+        tl.to({}, {
+            duration: 2
+        });
 
+        tl.to(heroPurpleGradient, {
+            scaleY: 1.3,
+            duration: 2,
+            ease: "power4.inOut",
+        }, "<=0.3");
 
         // Degradado brown de salida del hero hacia la narrativa.
         if (heroBrownGradient) {
@@ -835,70 +992,20 @@ function initHeroAnimation(heroButtonLoop) {
             tl.to(heroBrownGradient, {
                 yPercent: 0,
                 duration: 3,
-                ease: "none",
+                ease: "power4.inOut",
                 filter: "blur(20px)",
-                // scaleY: 1.1,
-            });
+                // scale: 1.1
+            }, "<=");
 
         }
+
+        tl.to(heroBrownSolid, {
+            scaleY: 1,
+            duration: 1
+        }, "<+=1.4");
     });
 }
 
-
-
-// HERO — BOTÓN
-
-function initHeroButtonAnimation() {
-    const heroButton = document.querySelector(".btn-hero");
-
-    if (!heroButton) return null;
-
-    gsap.set(heroButton, {
-        "--btn-border-scale": 1
-    });
-
-    const borderLoopTl = gsap.timeline({
-        paused: true,
-        repeat: -1,
-        yoyo: true
-    });
-
-    borderLoopTl.to(heroButton, {
-        "--btn-border-scale": 1.12,
-        duration: 2,
-        ease: "sine.inOut"
-    });
-
-    let returnTween = null;
-
-    heroButton.addEventListener("mouseenter", () => {
-        borderLoopTl.pause();
-
-        if (returnTween) returnTween.kill();
-
-        returnTween = gsap.to(heroButton, {
-            "--btn-border-scale": 1,
-            duration: 0.6,
-            ease: "sine.out"
-        });
-    });
-
-    heroButton.addEventListener("mouseleave", () => {
-        if (returnTween) returnTween.kill();
-
-        returnTween = gsap.to(heroButton, {
-            "--btn-border-scale": 1,
-            duration: 0.4,
-            ease: "sine.out",
-            onComplete: () => {
-                borderLoopTl.pause(0);
-                borderLoopTl.restart();
-            }
-        });
-    });
-
-    return borderLoopTl;
-}
 
 // Botón hero → scroll suave a narrativa
 const btnHero = document.querySelector('.btn-hero');
@@ -939,6 +1046,17 @@ function updateHeaderLogoTheme(theme) {
 
         img.setAttribute("src", nextSrc);
     });
+}
+
+function setInitialHeaderThemeForPage() {
+    const page = document.body.dataset.page;
+
+    if (page === "herramienta") {
+        setHeaderTheme("brown");
+        return;
+    }
+
+    setHeaderTheme("grey");
 }
 
 // HEADER — THEME SECTIONS
@@ -1050,6 +1168,8 @@ function initNarrativeSequence() {
 
         gsap.killTweensOf(changingItems);
 
+
+
         const tl = gsap.timeline();
 
         tl.to(changingItems, {
@@ -1124,7 +1244,7 @@ function initNarrativeSequence() {
         updateNarrativeIndicator(currentIndex);
     }
 
-    // Snan Points
+    // Snap Points
     function getSnapPointsFromLabels(timeline, labels) {
         if (!timeline || !labels.length) return [];
 
@@ -1189,7 +1309,7 @@ function initNarrativeSequence() {
     const shuffledPixelParts = shuffleArray(pixelParts);
 
     // Step 03
-    const apagaContent = sequence.querySelector(".narrative-layer--03 .txt-block__center");
+    const apagaContent = sequence.querySelectorAll(".narrative-layer--03 .txt-block__center p");
 
     // Step 04
     const juicioPurpleSphere = sequence.querySelector(".narrative-layer--04 .purple-sphere");
@@ -1212,9 +1332,103 @@ function initNarrativeSequence() {
     const pasoFlor3 = sequence.querySelector(".narrative-layer--06 .step--06-flor-3");
     const pasoFlor4 = sequence.querySelector(".narrative-layer--06 .step--06-flor-4");
     const pasoFlor5 = sequence.querySelector(".narrative-layer--06 .step--06-flor-5");
+    const pasoGradientTool = sequence.querySelector(".narrative-layer--06 .step--6_gradient__tool");
 
     const pasoContent = sequence.querySelector(".narrative-layer--06 .step--06__content");
     const pasoBtn = sequence.querySelector(".narrative-layer--06 .btn");
+
+    // Step 05 & 06 Luces
+    const allFlowersLights = gsap.utils.toArray(".step--05_luz, .step--06-luz");
+
+    const flowerLightPairs = [
+        {
+            triggerLight: ".step--06-luz-1",
+            centralLight: ".step--05_luz-1"
+
+        },
+        {
+            triggerLight: ".step--06-luz-4",
+            centralLight: ".step--05_luz-2"
+        },
+        {
+            triggerLight: ".step--06-luz-2",
+            centralLight: ".step--05_luz-5"
+        },
+        {
+            triggerLight: ".step--06-luz-3",
+            centralLight: ".step--05_luz-3"
+        },
+        {
+            triggerLight: ".step--06-luz-5",
+            centralLight: ".step--05_luz-4"
+        },
+    ]
+
+
+    const flowerLightsLoop = gsap.timeline({
+        paused: true,
+        repeat: -1
+    });
+
+
+    flowerLightPairs.forEach((pair) => {
+        const currentLights = [pair.triggerLight, pair.centralLight];
+
+        // 1. Aparece primero la luz del step 6
+        flowerLightsLoop.to(pair.triggerLight, {
+            autoAlpha: 1,
+            scale: 1.25,
+            duration: 1.8,
+            ease: "sine.inOut",
+            filter: "blur(1px)"
+        });
+
+        // 2. Pequeña pausa antes de activar la luz central
+
+        // 3. Aparece la luz central
+        flowerLightsLoop.to(pair.centralLight, {
+            autoAlpha: 1,
+            scale: 1.25,
+            duration: 1.8,
+            ease: "sine.inOut",
+            filter: "blur(1px)"
+        }, "<+=0.6");
+
+        // 4. Ambas se quedan encendidas un momento
+        flowerLightsLoop.to({}, {
+            duration: 0.8
+        });
+
+        // 5. Se apaga la pareja completa
+        flowerLightsLoop.to(currentLights, {
+            autoAlpha: 0,
+            scale: 0.75,
+            duration: 1.8,
+            ease: "sine.inOut",
+            filter: "blur(0px)"
+        });
+
+        // 6. Pausa antes de la siguiente pareja
+        // flowerLightsLoop.to({}, {
+        //     duration: 0.8
+        // });
+    });
+
+    // Cierre del loop: apagamos la última pareja antes de volver a empezar
+    const lastPair = flowerLightPairs[flowerLightPairs.length - 1];
+    const lastLights = [lastPair.triggerLight, lastPair.centralLight];
+
+    flowerLightsLoop.to(lastLights, {
+        autoAlpha: 0,
+        scale: 0.75,
+        duration: 1,
+        ease: "sine.inOut"
+    });
+
+    flowerLightsLoop.to({}, {
+        duration: 0.35
+    });
+
 
 
     // Snap to
@@ -1227,7 +1441,8 @@ function initNarrativeSequence() {
         "rest06",
         "rest07",
         "rest08",
-        "rest09"
+        "rest09",
+        "rest10",
 
     ];
 
@@ -1249,7 +1464,9 @@ function initNarrativeSequence() {
 
     gsap.set(nacerBgWhite, {
         autoAlpha: 0,
-        filter: "blur(2px)"
+        scale: 1,
+        filter: "blur(2px)",
+        transformOrigin: "50% 50%"
     });
 
     // Estado inicial layers
@@ -1328,6 +1545,22 @@ function initNarrativeSequence() {
         autoAlpha: 0
     });
 
+    gsap.set([pasoGradientTool], {
+        scaleY: 0
+    });
+
+    // Estado inicial STEP 6 & 05: Flores
+    gsap.set(allFlowersLights, {
+        autoAlpha: 0,
+        visibility: "hidden",
+        transformOrigin: "center center",
+        scale: 0.75
+    })
+
+    //quitar snapto en mobile
+    const isMobile = ScrollTrigger.isTouch || window.matchMedia("(max-width: 1279px)").matches;
+
+
     const tl = gsap.timeline({
         scrollTrigger: {
             trigger: sequence,
@@ -1337,8 +1570,8 @@ function initNarrativeSequence() {
             //markers: true,
             invalidateOnRefresh: true,
 
-            snap: {
-                snapTo: (progress) => {
+            snap: isMobile ? false : {
+                snapTo: (progress, self) => {
                     const duration = tl.duration();
 
                     if (!duration) return progress;
@@ -1347,23 +1580,42 @@ function initNarrativeSequence() {
 
                     if (!snapPoints.length) return progress;
 
-                    const closestPoint = gsap.utils.snap(snapPoints, progress);
-                    const distance = Math.abs(closestPoint - progress);
+                    const direction = self.direction;
 
-                    const maxSnapDistance = 0.08;
+                    const previousPoint = [...snapPoints]
+                        .reverse()
+                        .find((point) => point < progress);
+
+                    const nextPoint = snapPoints
+                        .find((point) => point > progress);
+
+                    const fallbackPoint = gsap.utils.snap(snapPoints, progress);
+
+                    const targetPoint = direction > 0
+                        ? nextPoint ?? fallbackPoint
+                        : previousPoint ?? fallbackPoint;
+
+                    const distance = Math.abs(targetPoint - progress);
+
+                    const maxSnapDistanceForward = 0.25;
+                    const maxSnapDistanceBackward = 0.15;
+
+                    const maxSnapDistance = direction > 0
+                        ? maxSnapDistanceForward
+                        : maxSnapDistanceBackward;
 
                     if (distance > maxSnapDistance) {
                         return progress;
                     }
 
-                    return closestPoint;
+                    return targetPoint;
                 },
                 duration: {
-                    min: 0.2, //0.45,
-                    max: 1.1 //1.1
+                    min: 2,
+                    max: 2.5
                 },
-                delay: 0.15,
-                ease: "power4.inOut",
+                delay: 0.12,
+                ease: "sine.inOut"
             },
 
             onEnter: () => {
@@ -1372,7 +1624,7 @@ function initNarrativeSequence() {
                 showNarrativeIndicator();
             },
             onEnterBack: () => {
-                setHeaderTheme("brown");
+                setHeaderTheme("grey");
                 syncNarrativeIndicator(tl);
                 showNarrativeIndicator();
             },
@@ -1387,9 +1639,15 @@ function initNarrativeSequence() {
         }
     });
 
+    function setHeaderThemeByDirection(forwardTheme, backwardTheme) {
+        const direction = tl.scrollTrigger ? tl.scrollTrigger.direction : 1;
+
+        setHeaderTheme(direction === -1 ? backwardTheme : forwardTheme);
+    }
+
     // STEP 1 — ANIMACIÓN
     tl.addLabel("chapter01");
-    tl.call(() => setHeaderTheme("grey"), null, "chapter01");
+    tl.call(() => setHeaderThemeByDirection("grey", "grey"), null, "chapter01");
 
     // tl.to(nacerGraphics, {
     //     scale: 10,
@@ -1402,20 +1660,26 @@ function initNarrativeSequence() {
         duration: 3
     }, "<+=0.3");
 
-    tl.to(nacerBgWhite, {
-        autoAlpha: 1,
-        duration: 0.1
-    }, "<=");
+    // tl.to(nacerBgWhite, {
+    //     autoAlpha: 1,
+    //     duration: 0.1
+    // }, "<=");
 
     tl.to({}, {
-        duration: 2
+        duration: 3
     });
 
-    //tl.addLabel("rest01");
+    tl.to(nacerBgWhite, {
+        autoAlpha: 1,
+        duration: 0.15,
+        ease: "sine.out"
+    });
+
+    tl.addLabel("rest01");
 
     tl.to(nacerBgWhite, {
         scale: 30,
-        duration: 4,
+        duration: 6,
         ease: "sine.out"
     });
 
@@ -1428,30 +1692,28 @@ function initNarrativeSequence() {
     // STEP 2 — ANIMACIÓN
 
     tl.addLabel("chapter02", "<+=3.2");
-    tl.call(() => setHeaderTheme("brown"), null, "chapter02");
+    tl.call(() => setHeaderThemeByDirection("brown", "grey"), null, "chapter02");
 
     tl.to(guionLayer, {
         autoAlpha: 1,
-        duration: 0.7,
+        duration: 2,
         ease: "sine.out"
-    }, "<-=1");
+    }, "<+=1");
     // }, "chapter02");
-
 
 
     tl.to(guionGraphics, {
         y: "25vh",
-        duration: 4,
+        duration: 6,
     }, "<-=0.1");
 
-    tl.addLabel("rest01");
+    tl.addLabel("rest02");
 
     tl.to(guionContent, {
         autoAlpha: 1,
         duration: 4,
         filter: "blur(0px)"
     }, "<+=0.1");
-
 
 
     // tl.addLabel("rest01");
@@ -1463,7 +1725,7 @@ function initNarrativeSequence() {
 
     tl.to(guionGraphics, {
         y: 0,
-        duration: 2,
+        duration: 6,
         scale: 1
     });
 
@@ -1473,33 +1735,33 @@ function initNarrativeSequence() {
 
     tl.to(shuffledPixelParts, {
         autoAlpha: 1,
-        duration: 0.05,
-        stagger: 0.035,
+        duration: 0.01,
+        stagger: 0.05,
         ease: "steps(1)"
     });
 
-    tl.addLabel("rest02");
+    tl.addLabel("rest03");
     //tl.addLabel("rest03");
 
     tl.to({}, {
-        duration: 4
+        duration: 2
     });
 
 
     tl.to(pixelSvg, {
         x: 300,
-        duration: 4,
-        ease: "sine.inOut"
+        duration: 5,
+        ease: "back.inOut(1.2)",
     });
 
 
     tl.to(guionImage, {
         x: -470,
-        duration: 4,
-        ease: "sine.inOut"
+        duration: 5,
+        ease: "back.inOut(1.2)",
     }, "<=");
 
-    tl.addLabel("rest03");
+    tl.addLabel("rest04");
 
     tl.to(nacerLayer, {
         autoAlpha: 0,
@@ -1509,7 +1771,7 @@ function initNarrativeSequence() {
 
     // STEP 3 — ANIMACIÓN
     tl.addLabel("chapter03", "<");
-    tl.call(() => setHeaderTheme("grey"), null, "chapter03");
+    tl.call(() => setHeaderThemeByDirection("grey", "brown"), null, "chapter03");
 
 
     tl.to(guionBgTransition, {
@@ -1534,7 +1796,11 @@ function initNarrativeSequence() {
     tl.to(apagaContent, {
         autoAlpha: 1,
         duration: 2,
-        filter: "blur(0px)"
+        filter: "blur(0px)",
+        stagger: {
+            each: 0.2,
+            from: "start"
+        }
     }, "<+=0.1");
 
     // tl.addLabel("rest04");
@@ -1548,7 +1814,7 @@ function initNarrativeSequence() {
     tl.to(pixelSvg, {
         x: () => getXToExitRight(pixelSvg),
         // x: 760,
-        duration: 3.5,
+        duration: 5.5,
         ease: "power1.in",
     });
 
@@ -1556,7 +1822,7 @@ function initNarrativeSequence() {
     tl.to(guionImage, {
         x: () => getXToExitLeft(guionImage),
         // x: -920,
-        duration: 3.5,
+        duration: 5.5,
         ease: "power1.in",
     }, "<=");
 
@@ -1580,7 +1846,7 @@ function initNarrativeSequence() {
         ease: "sine.out"
     }, "<-=1.2");
 
-    tl.addLabel("rest04");
+    tl.addLabel("rest05");
 
     //tl.addLabel("rest05");
 
@@ -1598,6 +1864,7 @@ function initNarrativeSequence() {
         ease: "sine.out"
     });
 
+    tl.addLabel("rest06");
     //tl.addLabel("rest06");
     // Pausa
     tl.to({}, {
@@ -1608,7 +1875,7 @@ function initNarrativeSequence() {
     tl.to(juicioBrownSphere, {
         autoAlpha: 1,
         scale: 65,
-        duration: 4,
+        duration: 7,
         filter: "blur(2px)",
         ease: "sine.out"
     });
@@ -1637,11 +1904,11 @@ function initNarrativeSequence() {
 
     tl.to(nombreFlorGrupo, {
         yPercent: 0,
-        duration: 5,
+        duration: 6,
         ease: "sine.out"
     }, "<=+0.1");
 
-    tl.addLabel("rest05");
+    tl.addLabel("rest07");
 
     tl.to(layer04, {
         autoAlpha: 0,
@@ -1663,13 +1930,13 @@ function initNarrativeSequence() {
 
     tl.to(nombreGradientBg, {
         scaleY: 3,
-        duration: 8,
+        duration: 4,
         ease: "power4.in",
     });
 
     tl.to([nombreFlorHblur, nombreFlorMblur], {
         autoAlpha: 0,
-        duration: 8,
+        duration: 4,
         ease: "power4.in",
     }, "<=");
 
@@ -1698,27 +1965,29 @@ function initNarrativeSequence() {
         duration: 3
     }, "<-=0.4");
 
+    tl.addLabel("rest08");
+
     tl.to(pasoFlor2, {
         yPercent: 0,
-        duration: 5,
+        duration: 6,
         ease: "power3.out",
     });
 
     tl.to(pasoFlor3, {
         yPercent: 0,
-        duration: 5,
+        duration: 6,
         ease: "power3.out",
     }, "<+=0.5");
 
     tl.to(pasoFlor4, {
         yPercent: 0,
-        duration: 5,
+        duration: 6,
         ease: "power3.out",
     }, "<+=0.7");
 
     tl.to(pasoFlor1, {
         yPercent: 0,
-        duration: 5,
+        duration: 6,
         ease: "power3.out",
     }, "<+=0.7");
 
@@ -1727,7 +1996,8 @@ function initNarrativeSequence() {
         yPercent: 0,
         duration: 6,
         ease: "power3.out",
-    }, "<+=0.5");
+    }, "<+=0.7");
+
 
     tl.to(pasoBtn, {
         autoAlpha: 1,
@@ -1735,36 +2005,545 @@ function initNarrativeSequence() {
         duration: 3
     }, "<+=0.5");
 
-    // Pausa
-    //tl.addLabel("rest09");
+    tl.addLabel("flowerLights");
+
     tl.to({}, {
-        duration: 4
+        duration: 1
     });
+
+    tl.addLabel("rest09");
+
+    let hasStartedFlowerLightsLoop = false;
+    let flowerLightsFadeOutTween = null;
+
+    //Reiniciar luces flores
+    function stopFlowerLightsLoop() {
+        if (!hasStartedFlowerLightsLoop) return;
+
+        hasStartedFlowerLightsLoop = false;
+
+        flowerLightsLoop.pause();
+
+        if (flowerLightsFadeOutTween) {
+            flowerLightsFadeOutTween.kill();
+        }
+
+        flowerLightsFadeOutTween = gsap.to(allFlowersLights, {
+            autoAlpha: 0,
+            scale: 0.45,
+            filter: "blur(8px)",
+            duration: 1.4,
+            ease: "sine.inOut",
+            overwrite: "auto",
+            onComplete: () => {
+                flowerLightsLoop.pause(0);
+
+                gsap.set(allFlowersLights, {
+                    autoAlpha: 0,
+                    scale: 0.75,
+                    filter: "blur(0px)"
+                });
+
+                flowerLightsFadeOutTween = null;
+            }
+        });
+    }
+    tl.call(() => {
+        if (hasStartedFlowerLightsLoop) return;
+
+        if (flowerLightsFadeOutTween) {
+            flowerLightsFadeOutTween.kill();
+            flowerLightsFadeOutTween = null;
+        }
+
+        gsap.set(allFlowersLights, {
+            autoAlpha: 0,
+            scale: 0.75,
+            filter: "blur(0px)"
+        });
+
+        hasStartedFlowerLightsLoop = true;
+        flowerLightsLoop.restart();
+    }, null, "flowerLights");
+
+    // tl.to({}, {
+    //     duration: 2
+    // });
 
     tl.eventCallback("onUpdate", () => {
         syncNarrativeIndicator(tl);
+
+        const flowerLightsTime = tl.labels.flowerLights;
+
+        if (typeof flowerLightsTime !== "number") return;
+
+        if (tl.time() >= flowerLightsTime && !hasStartedFlowerLightsLoop) {
+            if (flowerLightsFadeOutTween) {
+                flowerLightsFadeOutTween.kill();
+                flowerLightsFadeOutTween = null;
+            }
+
+            gsap.set(allFlowersLights, {
+                autoAlpha: 0,
+                scale: 0.75,
+                filter: "blur(0px)"
+            });
+
+            hasStartedFlowerLightsLoop = true;
+            flowerLightsLoop.restart();
+        }
+
+        if (tl.time() < flowerLightsTime - 0.05) {
+            stopFlowerLightsLoop();
+        }
+    });
+
+    tl.to({}, {
+        duration: 2
+    });
+
+    tl.to(pasoGradientTool, {
+        scaleY: 1.5,
+        duration: 3,
+    });
+
+    tl.addLabel("rest10");
+
+    tl.to({}, {
+        duration: 2
     });
 }
 
 
+// sección tool
+
+async function initToolAnimation() {
+    const toolSection = document.querySelector(".tool");
+    const titleTool = document.querySelector(".tool .hf-l");
+
+    const txtTool = document.querySelector(".tool .txt-block");
+    const btnTool = document.querySelector(".tool .btn");
+    const gradientTool = document.querySelector(".tool .tool_gradient__white");
+
+    const txtInfInfTool = document.querySelectorAll(".tool .tool_txt_inf p");
+
+    if (!toolSection || !titleTool || !txtTool || !btnTool || !txtInfInfTool.length) return;
+
+    const titleToolLines = titleTool.querySelectorAll(".tool .two-lines-title-line");
+
+    if (!titleToolLines.length) return;
+
+    const isToolPage = document.body.dataset.page === "herramienta";
+
+    // Espera a que las fuentes estén listas antes de partir líneas
+    if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+    }
+
+    gsap.set([titleTool, txtTool, btnTool], {
+        autoAlpha: 1
+    });
+
+
+    gsap.set(titleToolLines, {
+        autoAlpha: 0,
+        y: 18,
+        filter: "blur(10px)",
+        willChange: "transform, opacity, filter"
+    });
+
+    gsap.set(txtTool, {
+        autoAlpha: 0,
+        y: 20,
+        filter: "blur(7px)"
+    });
+
+    gsap.set(btnTool, {
+        autoAlpha: 0
+    });
+
+    if (gradientTool) {
+        gsap.set(gradientTool, {
+            scaleY: 0
+        });
+    }
+
+    gsap.set(txtInfInfTool, {
+        autoAlpha: 0,
+        y: 14,
+    });
+
+
+    //snap to tool escritorio
+    function getToolSnapPoints(timeline, labels) {
+        if (!timeline || !labels.length) return [];
+
+        const duration = timeline.duration();
+
+        if (!duration) return [];
+
+        return labels
+            .map((label) => timeline.labels[label] / duration)
+            .filter((point) => Number.isFinite(point));
+    }
+
+    const isMobile = ScrollTrigger.isTouch || window.matchMedia("(max-width: 1279px)").matches;
+
+    const toolSnapLabels = [
+        "toolContent",
+        "toolEnd"
+    ];
+
+    const tlTool = gsap.timeline(
+        isToolPage || isMobile
+            ? {}
+            : {
+                scrollTrigger: {
+                    trigger: toolSection,
+                    start: "top 70%",
+                    end: "bottom bottom",
+                    scrub: 1.2,
+                    // markers: true,
+                    invalidateOnRefresh: true
+                }
+            }
+    );
+
+    tlTool.to(titleToolLines, {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 2.4,
+        ease: "power3.out",
+        stagger: {
+            each: 0.18,
+            from: "start"
+        }
+    });
+
+    tlTool.to(txtTool, {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 2.4,
+        ease: "power3.out",
+        stagger: {
+            each: 0.18,
+            from: "start",
+        }
+    }, "<+=0.6");
+
+    tlTool.to(txtInfInfTool, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 1.5,
+        ease: "power3.out",
+        stagger: {
+            each: 0.18,
+            from: "start",
+        }
+    }, "<+=0.4");
+
+    tlTool.to(btnTool, {
+        autoAlpha: 1,
+        duration: 0.9
+    }, "<+=1.5");
+
+    tlTool.addLabel("toolContent");
+
+
+    // Solo en home
+    if (!isToolPage && gradientTool) {
+        tlTool.to({}, {
+            duration: 2
+        });
+
+        tlTool.to(gradientTool, {
+            scaleY: 1.5,
+            duration: 3
+        });
+
+        tlTool.addLabel("toolEnd");
+
+        tlTool.to({}, {
+            duration: 2
+        });
+    }
+}
+
+
+// BUSCO AYUDA ANIMATION
+
+function initRepoAnimation() {
+    const repoSection = document.querySelector(".repo");
+
+    if (!repoSection) return;
+
+    const titleRepo = repoSection.querySelector(".repo_hdr .hf-l");
+    const txtRepo = repoSection.querySelector(".repo_hdr .txt-block");
+    const itemsRepo = repoSection.querySelectorAll(".repo_contacts_row");
+    const titleRepoLines = titleRepo.querySelectorAll(".repo_hdr .two-lines-title-line");
+
+    if (!titleRepo || !txtRepo || !itemsRepo.length || !titleRepoLines.length) return;
+
+
+    gsap.set(titleRepo, {
+        autoAlpha: 1
+    });
+
+    gsap.set(txtRepo, {
+        autoAlpha: 0,
+        y: 18,
+        filter: "blur(10px)"
+    });
+
+    gsap.set(itemsRepo, {
+        autoAlpha: 0,
+        y: 24,
+        filter: "blur(10px)"
+    });
+
+    gsap.set(titleRepoLines, {
+        autoAlpha: 0,
+        y: 18,
+        filter: "blur(10px)"
+    });
+
+    const tlRepo = gsap.timeline();
+
+    tlRepo.to(titleRepoLines, {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1.4,
+        ease: "power3.out",
+        stagger: {
+            each: 0.12,
+            from: "start"
+        }
+    });
+
+    tlRepo.to(txtRepo, {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1.2,
+        ease: "power3.out"
+    }, "<+=0.4");
+
+    tlRepo.to(itemsRepo, {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1,
+        ease: "power3.out",
+        stagger: {
+            each: 0.08,
+            from: "start"
+        }
+    }, "<+=0.35");
+}
+
+
+
+// FOOTER
+
+function initFooterAnimation() {
+    const ftr = document.querySelector(".ftr");
+
+    if (!ftr) return;
+
+    const titleFtr = document.querySelector(".ftr .hf-xl");
+
+    const titleFtrSplit = new SplitText(titleFtr, {
+        type: "words,chars",
+        wordsClass: "word",
+        charsClass: "char"
+    });
+
+    gsap.set(titleFtr, {
+        autoAlpha: 1,
+        visibility: "visible",
+    });
+
+    gsap.set(titleFtrSplit.chars, {
+        autoAlpha: 0,
+        y: 18,
+        filter: "blur(12px)",
+        willChange: "transform, opacity, filter"
+    });
+
+    const tlFooter = gsap.timeline({
+        scrollTrigger: {
+            trigger: ftr,
+            start: "top 30%",
+            once: true
+            // markers: true
+        }
+
+    });
+
+    tlFooter.to(titleFtrSplit.chars, {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 3,
+        ease: "power3.out",
+        stagger: {
+            each: 0.03,
+            from: "end"
+        }
+    });
+
+}
+
+// FAQS ANIMATION
+
+function initFaqsAnimation() {
+    const faqsSection = document.querySelector(".sec_faqs");
+
+    if (!faqsSection) return;
+
+    const titleFaqs = faqsSection.querySelector(".hf-l");
+    const itemsFaqs = faqsSection.querySelectorAll(".dropdown_faqs");
+    const moreButton = faqsSection.querySelector(".btn-more");
+
+    if (!titleFaqs || !itemsFaqs.length) return;
+
+    const titleFaqsLines = titleFaqs.querySelectorAll(".two-lines-title-line");
+
+    if (!titleFaqsLines.length) return;
+
+    // seteo
+    gsap.set(titleFaqsLines, {
+        autoAlpha: 0,
+        y: 18,
+        filter: "blur(10px)"
+    });
+
+    gsap.set(itemsFaqs, {
+        autoAlpha: 0,
+        y: 24,
+        filter: "blur(10px)"
+    });
+
+    if (moreButton) {
+        gsap.set(moreButton, {
+            autoAlpha: 0,
+            y: 18,
+            filter: "blur(8px)"
+        });
+    }
+
+    // timeline
+    const tlFaqs = gsap.timeline({
+        scrollTrigger: {
+            trigger: faqsSection,
+            start: "top 75%",
+            once: true
+            // markers: true
+        }
+    });
+
+    tlFaqs.to(titleFaqsLines, {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1.4,
+        ease: "power3.out",
+        stagger: {
+            each: 0.12,
+            from: "start"
+        }
+    });
+
+    tlFaqs.to(itemsFaqs, {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 1,
+        ease: "power3.out",
+        stagger: {
+            each: 0.08,
+            from: "start"
+        }
+    }, "<+=0.35");
+
+    if (moreButton) {
+        tlFaqs.to(moreButton, {
+            autoAlpha: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 0.9,
+            ease: "power3.out"
+        }, "<+=0.35");
+    }
+}
 
 // INIT
 
-async function initApp() {
+let swup;
+let isSwupNavigation = false;
+
+async function initPage() {
+    const swupContainer = document.querySelector("#swup");
+
+    if (swupContainer?.dataset.page) {
+        document.body.dataset.page = swupContainer.dataset.page;
+    }
+
     await loadIncludes();
 
-    const heroButtonLoop = initHeroButtonAnimation();
+    setInitialHeaderThemeForPage();
 
     initFaqsMore();
     initFaqsAccordion();
 
     initHeroIntroMessages();
-    initHeroAnimation(heroButtonLoop);
+    initHeroAnimation();
     initNarrativeSequence();
     initHeaderThemeSections();
 
+    await initToolAnimation();
+    initFaqsAnimation();
+
+    initRepoAnimation();
+    initFooterAnimation();
+
     requestAnimationFrame(() => {
         ScrollTrigger.refresh();
+    });
+}
+
+async function initApp() {
+    await initPage();
+
+    initResizeRefresh();
+
+    swup = new Swup({
+        containers: ["#swup"]
+    });
+
+    swup.hooks.on("visit:start", () => {
+        document.documentElement.classList.add("is-page-transitioning");
+    });
+
+    swup.hooks.on("page:view", async () => {
+        isSwupNavigation = true;
+
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+
+        window.scrollTo(0, 0);
+
+        await initPage();
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    document.documentElement.classList.remove("is-page-transitioning");
+                }, 800);
+            });
+        });
     });
 }
 

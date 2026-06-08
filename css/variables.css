@@ -12,8 +12,6 @@
     --green: #9da795;
     --dark-green: #575446;
 
-
-
     /* - - ESPACIOS - - */
     --sp-3xl: 120px;
     --sp-2xl: clamp(100px, 7.8125vw, 150px);
@@ -21,22 +19,28 @@
     --sp-l: clamp(55px, 2.343vw + 25px, 70px);
     --sp-base: 44px;
     --sp-s: 30px;
-    --sp-xs: 18px;
+    /* --sp-s: clamp(30px, 2.34375vw, 60px); */
+    --sp-xs: clamp(18px, calc(12px + 0.46875vw), 24px);
     --sp-2xs: 12px;
 
     /* - - BORDER RADIUS - - */
     --radius-none: 0;
     --radius-m: 4px;
     --radius-l: 10px;
-    --radius-full: 999px;
+    --radius-full: 100%;
 
-    /* - - BOTTOM - - */
-    --btn-size: clamp(90px, 6.25vw, 116px);
+    /* - - BUTTONS - - */
+    --btn-size: clamp(90px, 6.25vw, 150px);
     --btn-border-scale: 1;
 
     /* - - LAYOUT - - */
     --page-padding: clamp(20px, 2.083vw, 56px);
-    --content-max-width: 1920px;
+    --content-max-width: 2560px;
+
+
+    /* - - IMAGES - - */
+    --repo-img-default: clamp(64px, calc(5.893vw - 20.86px), 130px);
+    --repo-img-hover: clamp(160px, calc(5.357vw + 82.86px), 220px);
 
 
 }
