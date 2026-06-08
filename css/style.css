@@ -582,7 +582,14 @@ body.is-intro-active .hero-intro-messages {
         .hf-l {
             flex: 1;
             overflow: visible;
-            margin-top: -2%;
+
+            @media (min-width:1280px) {
+                margin-top: -5%;
+            }
+
+            @media (min-width:2560px) {
+                margin-top: -2%;
+            }
 
             .line {
                 display: block;
