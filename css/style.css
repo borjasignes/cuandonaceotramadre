@@ -523,6 +523,9 @@ body.is-intro-active .hero-intro-messages {
 
         @media(min-width:1280px) {
             white-space: nowrap;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .char {
@@ -747,7 +750,11 @@ body.is-intro-active .hero-intro-messages {
 /* - - -  SEQUENCE 1 => 6  - - - */
 .narrative-sequence--all {
     position: relative;
-    height: 2400svh;
+    height: 700svh;
+
+    @media(min-width:1280px) {
+        height: 1550svh;
+    }
 
     >.sect-sticky {
         position: sticky;
@@ -2265,10 +2272,10 @@ body[data-page="busco-ayuda"] .repo_contacts_row {
             }
 
             @media(min-width:1280px) {
-                position: static;
-                left: auto;
-                top: auto;
-                transform: none;
+                position: relative;
+                left: 50%;
+                bottom: auto;
+                transform: translateX(-50%);
             }
 
             .char {

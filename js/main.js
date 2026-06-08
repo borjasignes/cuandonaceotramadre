@@ -265,7 +265,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 function shouldShowFullIntro() {
     const introLastSeen = localStorage.getItem("cnomIntroLastSeen");
     const now = Date.now();
-    const thirtyMinutes = 30 * 60 * 1000;
+    const thirtyMinutes = 1 * 60 * 1000;
 
     if (!introLastSeen) return true;
 
@@ -966,7 +966,7 @@ function initHeroAnimation() {
         tl.addLabel("heroRest02");
 
         tl.to({}, {
-            duration: 2
+            duration: 1.2
         });
 
         tl.to(heroPurpleGradient, {
@@ -977,7 +977,7 @@ function initHeroAnimation() {
         }, "<=0.3");
 
         tl.to({}, {
-            duration: 2
+            duration: 1.2
         });
 
         tl.to(heroPurpleGradient, {
@@ -1666,7 +1666,7 @@ function initNarrativeSequence() {
     // }, "<=");
 
     tl.to({}, {
-        duration: 3
+        duration: 1.5
     });
 
     tl.to(nacerBgWhite, {
@@ -1806,7 +1806,7 @@ function initNarrativeSequence() {
     // tl.addLabel("rest04");
 
     tl.to({}, {
-        duration: 3
+        duration: 1.5
     });
 
 
@@ -1852,7 +1852,7 @@ function initNarrativeSequence() {
 
     // Pausa
     tl.to({}, {
-        duration: 3
+        duration: 2
     });
 
     // Aparece esfera marrón
@@ -1868,7 +1868,7 @@ function initNarrativeSequence() {
     //tl.addLabel("rest06");
     // Pausa
     tl.to({}, {
-        duration: 3
+        duration: 2
     });
 
     // Esfera marrón ocupa toda la pantalla
@@ -1925,7 +1925,7 @@ function initNarrativeSequence() {
     // tl.addLabel("rest07");
     // Pausa
     tl.to({}, {
-        duration: 3
+        duration: 2
     });
 
     tl.to(nombreGradientBg, {
@@ -1947,7 +1947,7 @@ function initNarrativeSequence() {
         autoAlpha: 0,
         duration: 3,
         filter: "blur(15px)"
-    }, "<+=6.5");
+    }, "<+=4");
 
 
     // STEP 6 — ANIMACIÓN
@@ -2008,7 +2008,7 @@ function initNarrativeSequence() {
     tl.addLabel("flowerLights");
 
     tl.to({}, {
-        duration: 1
+        duration: 0.5
     });
 
     tl.addLabel("rest09");
@@ -2099,7 +2099,7 @@ function initNarrativeSequence() {
     });
 
     tl.to({}, {
-        duration: 2
+        duration: 1.5
     });
 
     tl.to(pasoGradientTool, {
@@ -2110,7 +2110,7 @@ function initNarrativeSequence() {
     tl.addLabel("rest10");
 
     tl.to({}, {
-        duration: 2
+        duration: 1
     });
 }
 
