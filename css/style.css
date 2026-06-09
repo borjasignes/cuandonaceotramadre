@@ -217,7 +217,7 @@ body.header-is-grey {
 
 .hero {
     position: relative;
-    height: 400vh;
+    height: 220vh;
     background-color: var(--green);
 
     .hero__sticky {
@@ -441,13 +441,13 @@ body.is-intro-active .hero-intro-messages {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: -20svh;
 
     height: 100svh;
 
     background: linear-gradient(to top,
             var(--brown) 0%,
-            var(--brown) 40%,
+            var(--brown) 70%,
             transparent 80%);
 
     opacity: 0;
@@ -455,7 +455,7 @@ body.is-intro-active .hero-intro-messages {
     will-change: transform;
 }
 
-.hero-purple-transition__color {
+/* .hero-purple-transition__color {
     position: absolute;
     left: 0;
     right: 0;
@@ -470,10 +470,26 @@ body.is-intro-active .hero-intro-messages {
     opacity: 0;
 
     transform-origin: bottom center;
-}
+} */
 
 
 .hero-brown-transition__solid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1vh;
+
+    height: 10svh;
+
+    background: linear-gradient(to top,
+            var(--purple) 0%,
+            var(--purple) 50%,
+            transparent 100%);
+    opacity: 0;
+}
+
+
+/* .hero-brown-transition__solid {
     position: absolute;
     left: 0;
     right: 0;
@@ -484,7 +500,7 @@ body.is-intro-active .hero-intro-messages {
 
     background-color: var(--brown);
     transform-origin: bottom center;
-}
+} */
 
 
 
@@ -886,14 +902,14 @@ body.is-intro-active .hero-intro-messages {
 @keyframes ghostPulse {
     0% {
         transform:
-            translate3d(-0.12vw, 0, 0);
-        opacity: 0.3;
+            translate3d(-2vw, 0, 0);
+        opacity: 0.6;
     }
 
     100% {
         transform:
-            translate3d(0.12vw, 0, 0);
-        opacity: 0.7;
+            translate3d(2vw, 0, 0);
+        opacity: 0.9;
     }
 }
 
@@ -1793,7 +1809,7 @@ body[data-page="herramienta"] .tool .btn {
 /* - - - T O O L - - - */
 .tool {
     background-color: var(--purple);
-    height: 400svh;
+    height: 250svh;
 
     .wrap {
         display: flex;

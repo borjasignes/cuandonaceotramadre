@@ -265,7 +265,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 function shouldShowFullIntro() {
     const introLastSeen = localStorage.getItem("cnomIntroLastSeen");
     const now = Date.now();
-    const thirtyMinutes = 1 * 60 * 1000;
+    const thirtyMinutes = 30 * 60 * 1000;
 
     if (!introLastSeen) return true;
 
@@ -762,7 +762,7 @@ function initHeroAnimation() {
 
         gsap.set(heroBrownSolid, {
             autoAlpha: 1,
-            scaleY: 0,
+            yPercent: 100,
         });
 
         // Estado inicial del degradado brown de salida del hero.
@@ -865,14 +865,14 @@ function initHeroAnimation() {
                         const narrativeTarget = document.querySelector("#narrative-step__1");
 
                         if (narrativeTarget) {
-                            const targetY = narrativeTarget.offsetTop + window.innerHeight * 0.62;
+                            const targetY = narrativeTarget.offsetTop + window.innerHeight * 0.55;
 
                             gsap.to(window, {
                                 scrollTo: {
                                     y: targetY
                                 },
-                                duration: 2.5,
-                                ease: "power2.inOut"
+                                duration: 1.8,
+                                ease: "power3.in",
                             });
                         }
                     }
@@ -966,43 +966,22 @@ function initHeroAnimation() {
         tl.addLabel("heroRest02");
 
         tl.to({}, {
-            duration: 1.2
+            duration: 2
         });
 
-        tl.to(heroPurpleGradient, {
+        tl.to(heroBrownSolid, {
             yPercent: 0,
-            scaleY: 0.5,
             duration: 2,
-            ease: "power4.inOut",
         }, "<=0.3");
 
-        tl.to({}, {
-            duration: 1.2
-        });
-
-        tl.to(heroPurpleGradient, {
-            scaleY: 1.3,
-            duration: 2,
-            ease: "power4.inOut",
-        }, "<=0.3");
-
-        // Degradado brown de salida del hero hacia la narrativa.
         if (heroBrownGradient) {
-
             tl.to(heroBrownGradient, {
                 yPercent: 0,
                 duration: 3,
-                ease: "power4.inOut",
+                ease: "none",
                 filter: "blur(20px)",
-                // scale: 1.1
-            }, "<=");
-
+            }, "<=0.3");
         }
-
-        tl.to(heroBrownSolid, {
-            scaleY: 1,
-            duration: 1
-        }, "<+=1.4");
     });
 }
 
@@ -1875,7 +1854,7 @@ function initNarrativeSequence() {
     tl.to(juicioBrownSphere, {
         autoAlpha: 1,
         scale: 65,
-        duration: 7,
+        duration: 5.5,
         filter: "blur(2px)",
         ease: "sine.out"
     });
@@ -2266,7 +2245,7 @@ async function initToolAnimation() {
         tlTool.addLabel("toolEnd");
 
         tlTool.to({}, {
-            duration: 2
+            duration: 4
         });
     }
 }
