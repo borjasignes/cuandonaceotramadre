@@ -217,8 +217,13 @@ body.header-is-grey {
 
 .hero {
     position: relative;
-    height: 220vh;
+    height: 280vh;
     background-color: var(--green);
+
+    @media (min-width:1280px) {
+        height: 270vh;
+
+    }
 
     .hero__sticky {
         position: sticky;
@@ -389,10 +394,16 @@ body.is-intro-active .hero-intro-messages {
 
         width: 100%;
         height: 170px;
+        pointer-events: none;
+
+        @media(min-width:1280px) {
+            height: clamp(170px, 11.8056vw, 320px);
+        }
 
         .hero-gradient__soft {
             position: absolute;
             inset: 0;
+            pointer-events: none;
 
             background: linear-gradient(to top,
                     var(--yellow) 0%,
@@ -406,6 +417,7 @@ body.is-intro-active .hero-intro-messages {
             right: 0;
             bottom: 0;
             top: auto;
+            pointer-events: none;
 
             height: 100svh;
 
@@ -479,13 +491,18 @@ body.is-intro-active .hero-intro-messages {
     right: 0;
     bottom: -1vh;
 
-    height: 10svh;
-
+    height: 18svh;
     background: linear-gradient(to top,
             var(--purple) 0%,
             var(--purple) 50%,
             transparent 100%);
     opacity: 0;
+
+    @media(min-width:1280px) {
+        height: 10svh;
+    }
+
+
 }
 
 
@@ -579,6 +596,8 @@ body.is-intro-active .hero-intro-messages {
     display: flex;
     align-items: center;
 
+
+
     @media(min-width:1280px) {
         align-items: flex-end;
         padding-bottom: var(--sp-2xl);
@@ -587,7 +606,7 @@ body.is-intro-active .hero-intro-messages {
     .hero-state--two__content {
         display: flex;
         flex-direction: column;
-        gap: var(--sp-s);
+        gap: var(--sp-base);
         width: 100%;
         align-items: center;
 
@@ -601,6 +620,10 @@ body.is-intro-active .hero-intro-messages {
         .hf-l {
             flex: 1;
             overflow: visible;
+
+            @media(max-width:1279px) {
+                font-size: 60px;
+            }
 
             @media (min-width:1280px) {
                 margin-top: -5%;
@@ -636,7 +659,8 @@ body.is-intro-active .hero-intro-messages {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    bottom: var(--sp-s);
+    bottom: var(--sp-base);
+    background-color: transparent;
 
     opacity: 0;
     visibility: hidden;
@@ -649,6 +673,10 @@ body.is-intro-active .hero-intro-messages {
         bottom: auto;
         transform: translate(-50%, -50%);
     }
+}
+
+.btn-hero {
+    cursor: pointer;
 }
 
 .btn-hero::before {
@@ -666,14 +694,48 @@ body.is-intro-active .hero-intro-messages {
     pointer-events: none;
 }
 
-.btn-hero:hover::before {
-    transform: scale(1.2);
+@media (hover: none) and (pointer: coarse) {
+    .btn-hero::before {
+        transform: scale(1) !important;
+        transition: none;
+    }
+
+    .btn-hero:hover::before {
+        transform: scale(1) !important;
+    }
 }
 
-/* .brown-sphere {
-    width: 2vmax;
-    filter: blur(2px);
-} */
+.btn-hero--mobile {
+    display: inline-flex;
+    position: relative;
+    left: auto;
+    bottom: auto;
+    top: auto;
+    transform: none;
+
+    align-self: center;
+
+    @media (min-width: 1280px) {
+        display: none;
+        pointer-events: none;
+    }
+
+}
+
+.btn-hero--desktop {
+    display: none;
+    pointer-events: none;
+
+    @media (min-width: 1280px) {
+        display: inline-flex;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        pointer-events: auto;
+    }
+}
 
 
 .brown-sphere {
@@ -766,7 +828,7 @@ body.is-intro-active .hero-intro-messages {
 /* - - -  SEQUENCE 1 => 6  - - - */
 .narrative-sequence--all {
     position: relative;
-    height: 700svh;
+    height: 1600svh;
 
     @media(min-width:1280px) {
         height: 1550svh;
@@ -880,7 +942,7 @@ body.is-intro-active .hero-intro-messages {
 
         .txt-block {
             color: var(--grey);
-            filter: blur(25px);
+            /* filter: blur(25px); */
             opacity: 0;
 
 

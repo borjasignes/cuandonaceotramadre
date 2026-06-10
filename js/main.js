@@ -413,6 +413,11 @@ function initHeroIntroMessages() {
         filter: "blur(8px)"
     });
 
+    gsap.set(".hero-state--two", {
+        autoAlpha: 0,
+        visibility: "hidden"
+    });
+
     gsap.set(heroGradient, {
         autoAlpha: 0,
         filter: "none"
@@ -685,7 +690,6 @@ function initHeroIntroMessages() {
 }
 
 
-
 // HERO - ANIMACIÓN PRINCIPAL
 
 function initHeroAnimation() {
@@ -721,7 +725,7 @@ function initHeroAnimation() {
         const heroPctMain = document.querySelector(".hero-pct");
         const heroBrownGradient = document.querySelector(".hero-brown-transition__gradient");
 
-        const heroPurpleGradient = document.querySelector(".hero-purple-transition__color");
+        // const heroPurpleGradient = document.querySelector(".hero-purple-transition__color");
         const heroBrownSolid = document.querySelector(".hero-brown-transition__solid");
 
         let girlYToCenter = "-18vh";
@@ -755,10 +759,10 @@ function initHeroAnimation() {
             filter: "blur(7px)"
         });
 
-        gsap.set(heroPurpleGradient, {
-            autoAlpha: 1,
-            yPercent: 100,
-        });
+        // gsap.set(heroPurpleGradient, {
+        //     autoAlpha: 1,
+        //     yPercent: 100,
+        // });
 
         gsap.set(heroBrownSolid, {
             autoAlpha: 1,
@@ -807,6 +811,7 @@ function initHeroAnimation() {
                 scrub: 1.2,
                 // markers: true,
 
+                // snap: false,
                 snap: isDesktop ? {
                     snapTo: (progress, self) => {
                         const duration = tl.duration();
@@ -859,20 +864,24 @@ function initHeroAnimation() {
                 } : false,
 
                 onUpdate: isDesktop ? (self) => {
+
                     if (self.progress >= 0.75 && self.direction === 1 && !self._hasSnapped) {
                         self._hasSnapped = true;
 
                         const narrativeTarget = document.querySelector("#narrative-step__1");
 
                         if (narrativeTarget) {
-                            const targetY = narrativeTarget.offsetTop + window.innerHeight * 0.55;
+                            const targetY = narrativeTarget.offsetTop + window.innerHeight * 0.35;
 
                             gsap.to(window, {
                                 scrollTo: {
-                                    y: targetY
+                                    y: targetY,
+                                    autoKill: false
                                 },
-                                duration: 1.8,
-                                ease: "power3.in",
+                                duration: 2.5,
+
+                                ease: "power2.inOut",
+                                overwrite: true
                             });
                         }
                     }
@@ -899,9 +908,10 @@ function initHeroAnimation() {
         });
 
         tl.to(".hero-pct", {
-            scale: 0.65,
-            y: isDesktop ? girlYToCenter : "-18vh",
-            duration: 3
+            scale: isDesktop ? 0.65 : 1,
+            y: isDesktop ? girlYToCenter : 0,
+            duration: 3,
+            ease: "sine.inOut"
         }, "<-=0.1");
 
         // Control de degradado inferior del hero
@@ -911,13 +921,13 @@ function initHeroAnimation() {
                 yPercent: isDesktop ? 10 : 65
             },
             {
-                scaleY: isDesktop ? desktopGradientScale : 2,
-                yPercent: isDesktop ? 8 : 0,
-                duration: 3
+                scaleY: isDesktop ? desktopGradientScale : 1.45,
+                yPercent: isDesktop ? 8 : 28,
+                duration: isDesktop ? 3 : 5,
+                ease: "sine.inOut"
             },
             "<"
         );
-
         tl.to(heroIntro, {
             autoAlpha: 0,
             filter: "blur(7px)",
@@ -940,7 +950,7 @@ function initHeroAnimation() {
                 each: 0.18,
                 from: "start"
             }
-        }, "<+=0.9");
+        }, isDesktop ? "<+=0.9" : "<+=2");
 
 
         tl.to(heroTxtParagraphs, {
@@ -953,12 +963,12 @@ function initHeroAnimation() {
                 each: 0.15,
                 from: "start"
             }
-        }, "<+=0.6");
+        }, isDesktop ? "<+=0.6" : "<+=1.2");
 
 
         let heroButtonDelayCall = null;
 
-        tl.to(".btn-hero", {
+        tl.to(isDesktop ? ".btn-hero--desktop" : ".btn-hero--mobile", {
             autoAlpha: 1,
             duration: 0.9
         }, "<+=0.5");
@@ -976,29 +986,56 @@ function initHeroAnimation() {
 
         if (heroBrownGradient) {
             tl.to(heroBrownGradient, {
-                yPercent: 0,
-                duration: 3,
-                ease: "none",
-                filter: "blur(20px)",
+                yPercent: isDesktop ? 0 : 49,
+                duration: isDesktop ? 3 : 3,
+                ease: "sine.inOut",
+                filter: isDesktop ? "blur(20px)" : "blur(10px)",
             }, "<=0.3");
         }
+
+        // if (!isDesktop) {
+        //     tl.to({}, {
+        //         duration: 2
+        //     });
+        // }
     });
 }
 
 
 // Botón hero → scroll suave a narrativa
-const btnHero = document.querySelector('.btn-hero');
-if (btnHero) {
-    btnHero.addEventListener('click', (e) => {
-        e.preventDefault();
-        const narrativeTarget = document.querySelector('#narrative-step__1');
-        if (narrativeTarget) {
-            narrativeTarget.scrollIntoView({ behavior: 'smooth' });
-        }
+function initHeroCtaScroll() {
+    const heroButtons = document.querySelectorAll(".btn-hero");
+
+    if (!heroButtons.length) return;
+
+    heroButtons.forEach((btnHero) => {
+        if (btnHero.dataset.heroCtaBound === "true") return;
+
+        btnHero.dataset.heroCtaBound = "true";
+
+        btnHero.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            const narrativeTarget = document.querySelector("#narrative-step__1");
+
+            if (!narrativeTarget) return;
+
+            const targetY = narrativeTarget.offsetTop + window.innerHeight * 0.90;
+
+            gsap.killTweensOf(window);
+
+            gsap.to(window, {
+                scrollTo: {
+                    y: targetY,
+                    autoKill: false
+                },
+                duration: 1.8,
+                ease: "power2.inOut",
+                overwrite: true
+            });
+        });
     });
 }
-
-
 // HEADER — THEME
 function setHeaderTheme(theme = "grey") {
     const allowedThemes = ["grey", "brown"];
@@ -1036,6 +1073,27 @@ function setInitialHeaderThemeForPage() {
     }
 
     setHeaderTheme("grey");
+}
+
+
+function initHomeLogoReload() {
+    const logoLink = document.querySelector("a.logo");
+
+    if (!logoLink) return;
+
+    logoLink.addEventListener("click", (event) => {
+        const isHomePage =
+            document.body.dataset.page === "home" ||
+            window.location.pathname === "/" ||
+            window.location.pathname.endsWith("/index.html");
+
+        if (!isHomePage) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        window.location.reload();
+    }, true);
 }
 
 // HEADER — THEME SECTIONS
@@ -1428,635 +1486,634 @@ function initNarrativeSequence() {
     if (!nacerLayer || !guionLayer || !nacerGraphics.length || !nacerTxt || !guionGraphics || !guionContent) return;
 
 
+    function setInitialNarrativeState(isDesktop) {
+        // Indicador
+        if (indicator) {
+            gsap.set(indicator, {
+                autoAlpha: 0
+            });
+        }
 
-    // Estado inicial STEP 1
-    gsap.set(nacerTxt, {
-        autoAlpha: 0,
-        filter: "blur(10px)"
-    });
+        activeIndicatorIndex = -1;
+        updateNarrativeIndicator(0, false);
 
-    gsap.set(nacerGraphics, {
-        transformOrigin: "50% 50%",
-        scale: 1,
-        force3D: false
-    });
+        gsap.set([indicatorCurrent, indicatorTitle], {
+            willChange: "transform, opacity, filter"
+        });
 
-    gsap.set(nacerBgWhite, {
-        autoAlpha: 0,
-        scale: 1,
-        filter: "blur(2px)",
-        transformOrigin: "50% 50%"
-    });
-
-    // Estado inicial layers
-    gsap.set(guionLayer, {
-        autoAlpha: 0
-    });
-
-    gsap.set([layer03, layer04, layer05, layer06], {
-        autoAlpha: 0
-    });
-
-    // Estado inicial STEP 2
-    gsap.set(guionGraphics, {
-        y: "100vh",
-        scale: 1.8
-    });
-
-    gsap.set(guionContent, {
-        autoAlpha: 0
-    });
-
-    gsap.set(guionBgTransition, {
-        autoAlpha: 0
-    });
-
-    // Estado inicial STEP 3
-    gsap.set(apagaContent, {
-        autoAlpha: 0,
-        filter: "blur(25px)"
-    });
-
-    // Estado inicial STEP 4
-    gsap.set(juicioBrownSphere, {
-        autoAlpha: 0,
-        filter: "blur(0px)",
-        scale: 0
-    });
-
-    // Importante:
-    if (pixelSvg) {
-        gsap.set(pixelSvg, {
+        // Capas principales
+        gsap.set(nacerLayer, {
             autoAlpha: 1
         });
-    }
 
-    // Estado inicial STEP 5
-    gsap.set([nombreGradientBtm, nombreGradientBg], {
-        scaleY: 0
-    });
-
-    gsap.set(nombreContent, {
-        autoAlpha: 0,
-        filter: "blur(20px)"
-    });
-
-    gsap.set(nombreFlorGrupo, {
-        yPercent: 60
-    });
-
-    // Estado inicial STEP 6
-    gsap.set([pasoFlor1, pasoFlor2, pasoFlor3, pasoFlor4, pasoFlor5], {
-        yPercent: 95
-    });
-
-    gsap.set(pasoContent, {
-        autoAlpha: 0,
-        filter: "blur(20px)"
-    });
-
-    gsap.set(pasoBtn, {
-        autoAlpha: 0,
-        filter: "blur(20px)"
-    });
-
-    gsap.set(pixelParts, {
-        autoAlpha: 0
-    });
-
-    gsap.set([pasoGradientTool], {
-        scaleY: 0
-    });
-
-    // Estado inicial STEP 6 & 05: Flores
-    gsap.set(allFlowersLights, {
-        autoAlpha: 0,
-        visibility: "hidden",
-        transformOrigin: "center center",
-        scale: 0.75
-    })
-
-    //quitar snapto en mobile
-    const isMobile = ScrollTrigger.isTouch || window.matchMedia("(max-width: 1279px)").matches;
-
-
-    const tl = gsap.timeline({
-        scrollTrigger: {
-            trigger: sequence,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1.2,
-            //markers: true,
-            invalidateOnRefresh: true,
-
-            snap: isMobile ? false : {
-                snapTo: (progress, self) => {
-                    const duration = tl.duration();
-
-                    if (!duration) return progress;
-
-                    const snapPoints = getSnapPointsFromLabels(tl, narrativeSnapLabels);
-
-                    if (!snapPoints.length) return progress;
-
-                    const direction = self.direction;
-
-                    const previousPoint = [...snapPoints]
-                        .reverse()
-                        .find((point) => point < progress);
-
-                    const nextPoint = snapPoints
-                        .find((point) => point > progress);
-
-                    const fallbackPoint = gsap.utils.snap(snapPoints, progress);
-
-                    const targetPoint = direction > 0
-                        ? nextPoint ?? fallbackPoint
-                        : previousPoint ?? fallbackPoint;
-
-                    const distance = Math.abs(targetPoint - progress);
-
-                    const maxSnapDistanceForward = 0.25;
-                    const maxSnapDistanceBackward = 0.15;
-
-                    const maxSnapDistance = direction > 0
-                        ? maxSnapDistanceForward
-                        : maxSnapDistanceBackward;
-
-                    if (distance > maxSnapDistance) {
-                        return progress;
-                    }
-
-                    return targetPoint;
-                },
-                duration: {
-                    min: 2,
-                    max: 2.5
-                },
-                delay: 0.12,
-                ease: "sine.inOut"
-            },
-
-            onEnter: () => {
-                setHeaderTheme("grey");
-                updateNarrativeIndicator(0, false);
-                showNarrativeIndicator();
-            },
-            onEnterBack: () => {
-                setHeaderTheme("grey");
-                syncNarrativeIndicator(tl);
-                showNarrativeIndicator();
-            },
-            onLeave: () => {
-                hideNarrativeIndicator();
-                setHeaderTheme("grey");
-            },
-            onLeaveBack: () => {
-                hideNarrativeIndicator();
-                setHeaderTheme("grey");
-            }
-        }
-    });
-
-    function setHeaderThemeByDirection(forwardTheme, backwardTheme) {
-        const direction = tl.scrollTrigger ? tl.scrollTrigger.direction : 1;
-
-        setHeaderTheme(direction === -1 ? backwardTheme : forwardTheme);
-    }
-
-    // STEP 1 — ANIMACIÓN
-    tl.addLabel("chapter01");
-    tl.call(() => setHeaderThemeByDirection("grey", "grey"), null, "chapter01");
-
-    // tl.to(nacerGraphics, {
-    //     scale: 10,
-    //     duration: 2
-    // });
-
-    tl.to(nacerTxt, {
-        autoAlpha: 1,
-        filter: "blur(0px)",
-        duration: 3
-    }, "<+=0.3");
-
-    // tl.to(nacerBgWhite, {
-    //     autoAlpha: 1,
-    //     duration: 0.1
-    // }, "<=");
-
-    tl.to({}, {
-        duration: 1.5
-    });
-
-    tl.to(nacerBgWhite, {
-        autoAlpha: 1,
-        duration: 0.15,
-        ease: "sine.out"
-    });
-
-    tl.addLabel("rest01");
-
-    tl.to(nacerBgWhite, {
-        scale: 30,
-        duration: 6,
-        ease: "sine.out"
-    });
-
-    tl.to(nacerTxt, {
-        autoAlpha: 0,
-        filter: "blur(20px)",
-        duration: 1
-    }, "<+=0.1");
-
-    // STEP 2 — ANIMACIÓN
-
-    tl.addLabel("chapter02", "<+=3.2");
-    tl.call(() => setHeaderThemeByDirection("brown", "grey"), null, "chapter02");
-
-    tl.to(guionLayer, {
-        autoAlpha: 1,
-        duration: 2,
-        ease: "sine.out"
-    }, "<+=1");
-    // }, "chapter02");
-
-
-    tl.to(guionGraphics, {
-        y: "25vh",
-        duration: 6,
-    }, "<-=0.1");
-
-    tl.addLabel("rest02");
-
-    tl.to(guionContent, {
-        autoAlpha: 1,
-        duration: 4,
-        filter: "blur(0px)"
-    }, "<+=0.1");
-
-
-    // tl.addLabel("rest01");
-    // tl.addLabel("rest02");
-
-    // tl.to({}, {
-    //     duration: 1
-    // });
-
-    tl.to(guionGraphics, {
-        y: 0,
-        duration: 6,
-        scale: 1
-    });
-
-    // tl.to({}, {
-    //     duration: 2
-    // });
-
-    tl.to(shuffledPixelParts, {
-        autoAlpha: 1,
-        duration: 0.01,
-        stagger: 0.05,
-        ease: "steps(1)"
-    });
-
-    tl.addLabel("rest03");
-    //tl.addLabel("rest03");
-
-    tl.to({}, {
-        duration: 2
-    });
-
-
-    tl.to(pixelSvg, {
-        x: 300,
-        duration: 5,
-        ease: "back.inOut(1.2)",
-    });
-
-
-    tl.to(guionImage, {
-        x: -470,
-        duration: 5,
-        ease: "back.inOut(1.2)",
-    }, "<=");
-
-    tl.addLabel("rest04");
-
-    tl.to(nacerLayer, {
-        autoAlpha: 0,
-        duration: 0.1,
-    }, "<=");
-
-
-    // STEP 3 — ANIMACIÓN
-    tl.addLabel("chapter03", "<");
-    tl.call(() => setHeaderThemeByDirection("grey", "brown"), null, "chapter03");
-
-
-    tl.to(guionBgTransition, {
-        autoAlpha: 1,
-        duration: 1.5,
-        ease: "sine.out"
-    }, "<");
-
-    tl.to(layer03, {
-        autoAlpha: 1,
-        duration: 1,
-        ease: "sine.out"
-    }, "<");
-
-    tl.to(guionContent, {
-        autoAlpha: 0,
-        duration: 1,
-        filter: "blur(50px)"
-    }, "<");
-
-    // Aparece texto step 3
-    tl.to(apagaContent, {
-        autoAlpha: 1,
-        duration: 2,
-        filter: "blur(0px)",
-        stagger: {
-            each: 0.2,
-            from: "start"
-        }
-    }, "<+=0.1");
-
-    // tl.addLabel("rest04");
-
-    tl.to({}, {
-        duration: 1.5
-    });
-
-
-    // Flor pixel sale de pantalla derecha
-    tl.to(pixelSvg, {
-        x: () => getXToExitRight(pixelSvg),
-        // x: 760,
-        duration: 5.5,
-        ease: "power1.in",
-    });
-
-    // Flor desenfocada sale de pantalla izquierda
-    tl.to(guionImage, {
-        x: () => getXToExitLeft(guionImage),
-        // x: -920,
-        duration: 5.5,
-        ease: "power1.in",
-    }, "<=");
-
-
-    // STEP 4 — ANIMACIÓN
-
-    // Desaparece texto step 3
-    tl.to(apagaContent, {
-        autoAlpha: 0,
-        duration: 2,
-        filter: "blur(50px)"
-    }, "<+=0.1");
-
-    // Aparece fondo morado + texto
-    tl.addLabel("chapter04");
-    tl.call(() => setHeaderTheme("grey"), null, "chapter04");
-
-    tl.to(layer04, {
-        autoAlpha: 1,
-        duration: 3.3,
-        ease: "sine.out"
-    }, "<-=1.2");
-
-    tl.addLabel("rest05");
-
-    //tl.addLabel("rest05");
-
-    // Pausa
-    tl.to({}, {
-        duration: 2
-    });
-
-    // Aparece esfera marrón
-    tl.to(juicioBrownSphere, {
-        autoAlpha: 1,
-        scale: 5,
-        duration: 3,
-        filter: "blur(1px)",
-        ease: "sine.out"
-    });
-
-    tl.addLabel("rest06");
-    //tl.addLabel("rest06");
-    // Pausa
-    tl.to({}, {
-        duration: 2
-    });
-
-    // Esfera marrón ocupa toda la pantalla
-    tl.to(juicioBrownSphere, {
-        autoAlpha: 1,
-        scale: 65,
-        duration: 5.5,
-        filter: "blur(2px)",
-        ease: "sine.out"
-    });
-
-    // Desaparece texto step 4
-    tl.to(juicioContent, {
-        autoAlpha: 0,
-        duration: 1,
-        filter: "blur(15px)"
-    }, "<+=0.1");
-
-
-    // STEP 5 — ANIMACIÓN
-    tl.addLabel("chapter05");
-    tl.call(() => setHeaderTheme("grey"), null, "chapter05");
-
-    tl.to(layer05, {
-        autoAlpha: 1,
-        duration: 0.5
-    }, "<-=1.7");
-
-    tl.to(nombreGradientBtm, {
-        scaleY: 1,
-        duration: 2
-    }, "<-=0.1");
-
-    tl.to(nombreFlorGrupo, {
-        yPercent: 0,
-        duration: 6,
-        ease: "sine.out"
-    }, "<=+0.1");
-
-    tl.addLabel("rest07");
-
-    tl.to(layer04, {
-        autoAlpha: 0,
-        duration: 0.1
-    }, "<=");
-
-    tl.to(nombreContent, {
-        autoAlpha: 1,
-        duration: 3,
-        filter: "blur(0px)"
-    }, "<-=0.2");
-
-    // tl.addLabel("rest03");
-    // tl.addLabel("rest07");
-    // Pausa
-    tl.to({}, {
-        duration: 2
-    });
-
-    tl.to(nombreGradientBg, {
-        scaleY: 3,
-        duration: 4,
-        ease: "power4.in",
-    });
-
-    tl.to([nombreFlorHblur, nombreFlorMblur], {
-        autoAlpha: 0,
-        duration: 4,
-        ease: "power4.in",
-    }, "<=");
-
-    //tl.addLabel("rest08");
-    // Pausa
-
-    tl.to(nombreContent, {
-        autoAlpha: 0,
-        duration: 3,
-        filter: "blur(15px)"
-    }, "<+=4");
-
-
-    // STEP 6 — ANIMACIÓN
-    tl.addLabel("chapter06");
-    tl.call(() => setHeaderTheme("grey"), null, "chapter06");
-
-    tl.to(layer06, {
-        autoAlpha: 1,
-        duration: 0.1
-    }, "<=");
-
-    tl.to(pasoContent, {
-        autoAlpha: 1,
-        filter: "blur(0px)",
-        duration: 3
-    }, "<-=0.4");
-
-    tl.addLabel("rest08");
-
-    tl.to(pasoFlor2, {
-        yPercent: 0,
-        duration: 6,
-        ease: "power3.out",
-    });
-
-    tl.to(pasoFlor3, {
-        yPercent: 0,
-        duration: 6,
-        ease: "power3.out",
-    }, "<+=0.5");
-
-    tl.to(pasoFlor4, {
-        yPercent: 0,
-        duration: 6,
-        ease: "power3.out",
-    }, "<+=0.7");
-
-    tl.to(pasoFlor1, {
-        yPercent: 0,
-        duration: 6,
-        ease: "power3.out",
-    }, "<+=0.7");
-
-
-    tl.to(pasoFlor5, {
-        yPercent: 0,
-        duration: 6,
-        ease: "power3.out",
-    }, "<+=0.7");
-
-
-    tl.to(pasoBtn, {
-        autoAlpha: 1,
-        filter: "blur(0px)",
-        duration: 3
-    }, "<+=0.5");
-
-    tl.addLabel("flowerLights");
-
-    tl.to({}, {
-        duration: 0.5
-    });
-
-    tl.addLabel("rest09");
-
-    let hasStartedFlowerLightsLoop = false;
-    let flowerLightsFadeOutTween = null;
-
-    //Reiniciar luces flores
-    function stopFlowerLightsLoop() {
-        if (!hasStartedFlowerLightsLoop) return;
-
-        hasStartedFlowerLightsLoop = false;
-
-        flowerLightsLoop.pause();
-
-        if (flowerLightsFadeOutTween) {
-            flowerLightsFadeOutTween.kill();
-        }
-
-        flowerLightsFadeOutTween = gsap.to(allFlowersLights, {
-            autoAlpha: 0,
-            scale: 0.45,
-            filter: "blur(8px)",
-            duration: 1.4,
-            ease: "sine.inOut",
-            overwrite: "auto",
-            onComplete: () => {
-                flowerLightsLoop.pause(0);
-
-                gsap.set(allFlowersLights, {
-                    autoAlpha: 0,
-                    scale: 0.75,
-                    filter: "blur(0px)"
-                });
-
-                flowerLightsFadeOutTween = null;
-            }
+        gsap.set([guionLayer, layer03, layer04, layer05, layer06], {
+            autoAlpha: 0
         });
-    }
-    tl.call(() => {
-        if (hasStartedFlowerLightsLoop) return;
 
-        if (flowerLightsFadeOutTween) {
-            flowerLightsFadeOutTween.kill();
-            flowerLightsFadeOutTween = null;
+        // Step 01
+        gsap.set(nacerGraphics, {
+            transformOrigin: "50% 50%",
+            scale: 1,
+            force3D: false
+        });
+
+        gsap.set(nacerBgWhite, {
+            autoAlpha: 0,
+            scale: 1,
+            filter: "blur(2px)",
+            transformOrigin: "50% 50%"
+        });
+
+        gsap.set(nacerTxt, {
+            autoAlpha: isDesktop ? 0 : 1,
+            filter: isDesktop ? "blur(10px)" : "blur(0px)"
+        });
+
+        // Step 02
+        gsap.set(guionGraphics, {
+            y: "100vh",
+            scale: 1.8
+        });
+
+        gsap.set(guionContent, {
+            autoAlpha: 0
+        });
+
+        gsap.set(guionBgTransition, {
+            autoAlpha: 0
+        });
+
+        if (pixelSvg) {
+            gsap.set(pixelSvg, {
+                autoAlpha: 1
+            });
         }
 
-        gsap.set(allFlowersLights, {
+        gsap.set(pixelParts, {
+            autoAlpha: 0
+        });
+
+        // Step 03
+        gsap.set(apagaContent, {
             autoAlpha: 0,
-            scale: 0.75,
+            filter: "blur(25px)"
+        });
+
+        // Step 04
+        // gsap.set(juicioPurpleSphere, {
+        //     autoAlpha: 0,
+        //     scale: 0,
+        //     filter: "blur(0px)"
+        // });
+
+        gsap.set(juicioBrownSphere, {
+            autoAlpha: 0,
+            scale: 0,
             filter: "blur(0px)"
         });
 
-        hasStartedFlowerLightsLoop = true;
-        flowerLightsLoop.restart();
-    }, null, "flowerLights");
+        // gsap.set(juicioContent, {
+        //     autoAlpha: 0,
+        //     filter: "blur(20px)"
+        // });
 
-    // tl.to({}, {
-    //     duration: 2
-    // });
+        // Step 05
+        gsap.set([nombreGradientBtm, nombreGradientBg], {
+            scaleY: 0
+        });
 
-    tl.eventCallback("onUpdate", () => {
-        syncNarrativeIndicator(tl);
+        gsap.set(nombreContent, {
+            autoAlpha: 0,
+            filter: "blur(20px)"
+        });
 
-        const flowerLightsTime = tl.labels.flowerLights;
+        gsap.set(nombreFlorGrupo, {
+            yPercent: 60
+        });
 
-        if (typeof flowerLightsTime !== "number") return;
+        // gsap.set([nombreFlorHblur, nombreFlorMblur, nombreFlorLblur], {
+        //     autoAlpha: 0
+        // });
 
-        if (tl.time() >= flowerLightsTime && !hasStartedFlowerLightsLoop) {
+        // Step 06
+        gsap.set([pasoFlor1, pasoFlor2, pasoFlor3, pasoFlor4, pasoFlor5], {
+            yPercent: 95
+        });
+
+        gsap.set(pasoContent, {
+            autoAlpha: 0,
+            filter: "blur(20px)"
+        });
+
+        gsap.set(pasoBtn, {
+            autoAlpha: 0,
+            filter: "blur(20px)"
+        });
+
+        gsap.set(pasoGradientTool, {
+            scaleY: 0
+        });
+
+        gsap.set(allFlowersLights, {
+            autoAlpha: 0,
+            visibility: "hidden",
+            transformOrigin: "center center",
+            scale: 0.75
+        });
+    }
+
+    function initNarrativeDesktop() {
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: sequence,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.2,
+                //markers: true,
+                invalidateOnRefresh: true,
+
+                snap: {
+                    snapTo: (progress, self) => {
+                        const duration = tl.duration();
+
+                        if (!duration) return progress;
+
+                        const snapPoints = getSnapPointsFromLabels(tl, narrativeSnapLabels);
+
+                        if (!snapPoints.length) return progress;
+
+                        const direction = self.direction;
+
+                        const previousPoint = [...snapPoints]
+                            .reverse()
+                            .find((point) => point < progress);
+
+                        const nextPoint = snapPoints
+                            .find((point) => point > progress);
+
+                        const fallbackPoint = gsap.utils.snap(snapPoints, progress);
+
+                        const targetPoint = direction > 0
+                            ? nextPoint ?? fallbackPoint
+                            : previousPoint ?? fallbackPoint;
+
+                        const distance = Math.abs(targetPoint - progress);
+
+                        const maxSnapDistanceForward = 0.25;
+                        const maxSnapDistanceBackward = 0.15;
+
+                        const maxSnapDistance = direction > 0
+                            ? maxSnapDistanceForward
+                            : maxSnapDistanceBackward;
+
+                        if (distance > maxSnapDistance) {
+                            return progress;
+                        }
+
+                        return targetPoint;
+                    },
+                    duration: {
+                        min: 2,
+                        max: 2.5
+                    },
+                    delay: 0.12,
+                    ease: "sine.inOut"
+                },
+
+                onEnter: () => {
+                    setHeaderTheme("grey");
+                    updateNarrativeIndicator(0, false);
+                    showNarrativeIndicator();
+                },
+                onEnterBack: () => {
+                    setHeaderTheme("grey");
+                    syncNarrativeIndicator(tl);
+                    showNarrativeIndicator();
+                },
+                onLeave: () => {
+                    hideNarrativeIndicator();
+                    setHeaderTheme("grey");
+                },
+                onLeaveBack: () => {
+                    hideNarrativeIndicator();
+                    setHeaderTheme("grey");
+                }
+            }
+        });
+
+        function setHeaderThemeByDirection(forwardTheme, backwardTheme) {
+            const direction = tl.scrollTrigger ? tl.scrollTrigger.direction : 1;
+
+            setHeaderTheme(direction === -1 ? backwardTheme : forwardTheme);
+        }
+
+        // STEP 1 — ANIMACIÓN
+        tl.addLabel("chapter01");
+        tl.call(() => setHeaderThemeByDirection("grey", "grey"), null, "chapter01");
+
+        // tl.to(nacerGraphics, {
+        //     scale: 10,
+        //     duration: 2
+        // });
+
+        tl.to(nacerTxt, {
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            duration: 2
+        }, "<+=0.3");
+
+        // tl.to(nacerBgWhite, {
+        //     autoAlpha: 1,
+        //     duration: 0.1
+        // }, "<=");
+
+        tl.to({}, {
+            duration: 1.5
+        });
+
+        tl.to(nacerBgWhite, {
+            autoAlpha: 1,
+            duration: 0.15,
+            ease: "sine.out"
+        });
+
+        tl.addLabel("rest01");
+
+        tl.to(nacerBgWhite, {
+            scale: 30,
+            duration: 6,
+            ease: "sine.out"
+        });
+
+        tl.to(nacerTxt, {
+            autoAlpha: 0,
+            filter: "blur(20px)",
+            duration: 1
+        }, "<+=0.1");
+
+        // STEP 2 — ANIMACIÓN
+
+        tl.addLabel("chapter02", "<+=3.2");
+        tl.call(() => setHeaderThemeByDirection("brown", "grey"), null, "chapter02");
+
+        tl.to(guionLayer, {
+            autoAlpha: 1,
+            duration: 2,
+            ease: "sine.out"
+        }, "<+=1");
+        // }, "chapter02");
+
+
+        tl.to(guionGraphics, {
+            y: "25vh",
+            duration: 6,
+        }, "<-=0.1");
+
+        tl.addLabel("rest02");
+
+        tl.to(guionContent, {
+            autoAlpha: 1,
+            duration: 4,
+            filter: "blur(0px)"
+        }, "<+=0.1");
+
+
+        // tl.addLabel("rest01");
+        // tl.addLabel("rest02");
+
+        // tl.to({}, {
+        //     duration: 1
+        // });
+
+        tl.to(guionGraphics, {
+            y: 0,
+            duration: 6,
+            scale: 1
+        });
+
+        // tl.to({}, {
+        //     duration: 2
+        // });
+
+        tl.to(shuffledPixelParts, {
+            autoAlpha: 1,
+            duration: 0.01,
+            stagger: 0.05,
+            ease: "steps(1)"
+        });
+
+        tl.addLabel("rest03");
+        //tl.addLabel("rest03");
+
+        tl.to({}, {
+            duration: 2
+        });
+
+
+        tl.to(pixelSvg, {
+            x: 300,
+            duration: 5,
+            ease: "sine.out",
+        });
+
+
+        tl.to(guionImage, {
+            x: -470,
+            duration: 5,
+            ease: "sine.out",
+        }, "<=");
+
+        tl.addLabel("rest04");
+
+        tl.to(nacerLayer, {
+            autoAlpha: 0,
+            duration: 0.1,
+        }, "<=");
+
+
+        // STEP 3 — ANIMACIÓN
+        tl.addLabel("chapter03", "<");
+        tl.call(() => setHeaderThemeByDirection("grey", "brown"), null, "chapter03");
+
+
+        tl.to(guionBgTransition, {
+            autoAlpha: 1,
+            duration: 1.5,
+            ease: "sine.out"
+        }, "<");
+
+        tl.to(layer03, {
+            autoAlpha: 1,
+            duration: 1,
+            ease: "sine.out"
+        }, "<");
+
+        tl.to(guionContent, {
+            autoAlpha: 0,
+            duration: 1,
+            filter: "blur(50px)"
+        }, "<");
+
+        // Aparece texto step 3
+        tl.to(apagaContent, {
+            autoAlpha: 1,
+            duration: 2,
+            filter: "blur(0px)",
+            stagger: {
+                each: 0.2,
+                from: "start"
+            }
+        }, "<+=0.1");
+
+        // tl.addLabel("rest04");
+
+        tl.to({}, {
+            duration: 1.5
+        });
+
+
+        // Flor pixel sale de pantalla derecha
+        tl.to(pixelSvg, {
+            x: () => getXToExitRight(pixelSvg),
+            // x: 760,
+            duration: 5.5,
+            ease: "power1.in",
+        });
+
+        // Flor desenfocada sale de pantalla izquierda
+        tl.to(guionImage, {
+            x: () => getXToExitLeft(guionImage),
+            // x: -920,
+            duration: 5.5,
+            ease: "power1.in",
+        }, "<=");
+
+
+        // STEP 4 — ANIMACIÓN
+
+        // Desaparece texto step 3
+        tl.to(apagaContent, {
+            autoAlpha: 0,
+            duration: 2,
+            filter: "blur(50px)"
+        }, "<+=0.1");
+
+        // Aparece fondo morado + texto
+        tl.addLabel("chapter04");
+        tl.call(() => setHeaderTheme("grey"), null, "chapter04");
+
+        tl.to(layer04, {
+            autoAlpha: 1,
+            duration: 3.3,
+            ease: "sine.out"
+        }, "<-=1.2");
+
+        tl.addLabel("rest05");
+
+        //tl.addLabel("rest05");
+
+        // Pausa
+        tl.to({}, {
+            duration: 2
+        });
+
+        // Aparece esfera marrón
+        tl.to(juicioBrownSphere, {
+            autoAlpha: 1,
+            scale: 5,
+            duration: 3,
+            filter: "blur(1px)",
+            ease: "sine.out"
+        });
+
+        tl.addLabel("rest06");
+        //tl.addLabel("rest06");
+        // Pausa
+        tl.to({}, {
+            duration: 2
+        });
+
+        // Esfera marrón ocupa toda la pantalla
+        tl.to(juicioBrownSphere, {
+            autoAlpha: 1,
+            scale: 65,
+            duration: 5.5,
+            filter: "blur(2px)",
+            ease: "sine.out"
+        });
+
+        // Desaparece texto step 4
+        tl.to(juicioContent, {
+            autoAlpha: 0,
+            duration: 1,
+            filter: "blur(15px)"
+        }, "<+=0.1");
+
+
+        // STEP 5 — ANIMACIÓN
+        tl.addLabel("chapter05");
+        tl.call(() => setHeaderTheme("grey"), null, "chapter05");
+
+        tl.to(layer05, {
+            autoAlpha: 1,
+            duration: 0.5
+        }, "<-=1.7");
+
+        tl.to(nombreGradientBtm, {
+            scaleY: 1,
+            duration: 2
+        }, "<-=0.1");
+
+        tl.to(nombreFlorGrupo, {
+            yPercent: 0,
+            duration: 6,
+            ease: "sine.out"
+        }, "<=+0.1");
+
+        tl.addLabel("rest07");
+
+        tl.to(layer04, {
+            autoAlpha: 0,
+            duration: 0.1
+        }, "<=");
+
+        tl.to(nombreContent, {
+            autoAlpha: 1,
+            duration: 3,
+            filter: "blur(0px)"
+        }, "<-=0.2");
+
+        // tl.addLabel("rest03");
+        // tl.addLabel("rest07");
+        // Pausa
+        tl.to({}, {
+            duration: 2
+        });
+
+        tl.to(nombreGradientBg, {
+            scaleY: 3,
+            duration: 4,
+            ease: "power4.in",
+        });
+
+        tl.to([nombreFlorHblur, nombreFlorMblur], {
+            autoAlpha: 0,
+            duration: 4,
+            ease: "power4.in",
+        }, "<=");
+
+        //tl.addLabel("rest08");
+        // Pausa
+
+        tl.to(nombreContent, {
+            autoAlpha: 0,
+            duration: 3,
+            filter: "blur(15px)"
+        }, "<+=4");
+
+
+        // STEP 6 — ANIMACIÓN
+        tl.addLabel("chapter06");
+        tl.call(() => setHeaderTheme("grey"), null, "chapter06");
+
+        tl.to(layer06, {
+            autoAlpha: 1,
+            duration: 0.1
+        }, "<=");
+
+        tl.to(pasoContent, {
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            duration: 3
+        }, "<-=0.4");
+
+        tl.addLabel("rest08");
+
+        tl.to(pasoFlor2, {
+            yPercent: 0,
+            duration: 6,
+            ease: "power3.out",
+        });
+
+        tl.to(pasoFlor3, {
+            yPercent: 0,
+            duration: 6,
+            ease: "power3.out",
+        }, "<+=0.5");
+
+        tl.to(pasoFlor4, {
+            yPercent: 0,
+            duration: 6,
+            ease: "power3.out",
+        }, "<+=0.7");
+
+        tl.to(pasoFlor1, {
+            yPercent: 0,
+            duration: 6,
+            ease: "power3.out",
+        }, "<+=0.7");
+
+
+        tl.to(pasoFlor5, {
+            yPercent: 0,
+            duration: 6,
+            ease: "power3.out",
+        }, "<+=0.7");
+
+
+        tl.to(pasoBtn, {
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            duration: 3
+        }, "<+=0.5");
+
+        tl.addLabel("flowerLights");
+
+        tl.to({}, {
+            duration: 0.5
+        });
+
+        tl.addLabel("rest09");
+
+        let hasStartedFlowerLightsLoop = false;
+        let flowerLightsFadeOutTween = null;
+
+        //Reiniciar luces flores
+        function stopFlowerLightsLoop() {
+            if (!hasStartedFlowerLightsLoop) return;
+
+            hasStartedFlowerLightsLoop = false;
+
+            flowerLightsLoop.pause();
+
+            if (flowerLightsFadeOutTween) {
+                flowerLightsFadeOutTween.kill();
+            }
+
+            flowerLightsFadeOutTween = gsap.to(allFlowersLights, {
+                autoAlpha: 0,
+                scale: 0.45,
+                filter: "blur(8px)",
+                duration: 1.4,
+                ease: "sine.inOut",
+                overwrite: "auto",
+                onComplete: () => {
+                    flowerLightsLoop.pause(0);
+
+                    gsap.set(allFlowersLights, {
+                        autoAlpha: 0,
+                        scale: 0.75,
+                        filter: "blur(0px)"
+                    });
+
+                    flowerLightsFadeOutTween = null;
+                }
+            });
+        }
+        tl.call(() => {
+            if (hasStartedFlowerLightsLoop) return;
+
             if (flowerLightsFadeOutTween) {
                 flowerLightsFadeOutTween.kill();
                 flowerLightsFadeOutTween = null;
@@ -2070,26 +2127,494 @@ function initNarrativeSequence() {
 
             hasStartedFlowerLightsLoop = true;
             flowerLightsLoop.restart();
+        }, null, "flowerLights");
+
+        // tl.to({}, {
+        //     duration: 2
+        // });
+
+        tl.eventCallback("onUpdate", () => {
+            syncNarrativeIndicator(tl);
+
+            const flowerLightsTime = tl.labels.flowerLights;
+
+            if (typeof flowerLightsTime !== "number") return;
+
+            if (tl.time() >= flowerLightsTime && !hasStartedFlowerLightsLoop) {
+                if (flowerLightsFadeOutTween) {
+                    flowerLightsFadeOutTween.kill();
+                    flowerLightsFadeOutTween = null;
+                }
+
+                gsap.set(allFlowersLights, {
+                    autoAlpha: 0,
+                    scale: 0.75,
+                    filter: "blur(0px)"
+                });
+
+                hasStartedFlowerLightsLoop = true;
+                flowerLightsLoop.restart();
+            }
+
+            if (tl.time() < flowerLightsTime - 0.05) {
+                stopFlowerLightsLoop();
+            }
+        });
+
+        tl.to({}, {
+            duration: 1.5
+        });
+
+        tl.to(pasoGradientTool, {
+            scaleY: 1.5,
+            duration: 3,
+        });
+
+        tl.addLabel("rest10");
+
+        tl.to({}, {
+            duration: 1
+        });
+
+    }
+
+    function initNarrativeMobile() {
+        let hasStartedFlowerLightsLoop = false;
+        let flowerLightsFadeOutTween = null;
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: sequence,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.2,
+                invalidateOnRefresh: true,
+
+                // Sin snapTo en mobile/tablet
+                snap: false,
+
+                onEnter: () => {
+                    setHeaderTheme("grey");
+                    updateNarrativeIndicator(0, false);
+                    showNarrativeIndicator();
+                },
+                onEnterBack: () => {
+                    setHeaderTheme("grey");
+                    syncNarrativeIndicator(tl);
+                    showNarrativeIndicator();
+                },
+                onLeave: () => {
+                    hideNarrativeIndicator();
+                    setHeaderTheme("grey");
+                },
+                onLeaveBack: () => {
+                    hideNarrativeIndicator();
+                    setHeaderTheme("grey");
+                }
+            }
+        });
+
+        function stopFlowerLightsLoop() {
+            if (!hasStartedFlowerLightsLoop) return;
+
+            hasStartedFlowerLightsLoop = false;
+
+            flowerLightsLoop.pause();
+
+            if (flowerLightsFadeOutTween) {
+                flowerLightsFadeOutTween.kill();
+            }
+
+            flowerLightsFadeOutTween = gsap.to(allFlowersLights, {
+                autoAlpha: 0,
+                scale: 0.45,
+                filter: "blur(8px)",
+                duration: 1.4,
+                ease: "sine.inOut",
+                overwrite: "auto",
+                onComplete: () => {
+                    flowerLightsLoop.pause(0);
+
+                    gsap.set(allFlowersLights, {
+                        autoAlpha: 0,
+                        scale: 0.75,
+                        filter: "blur(0px)"
+                    });
+
+                    flowerLightsFadeOutTween = null;
+                }
+            });
         }
 
-        if (tl.time() < flowerLightsTime - 0.05) {
-            stopFlowerLightsLoop();
+        // STEP 1
+        tl.addLabel("chapter01");
+        tl.call(() => setHeaderTheme("grey"), null, "chapter01");
+
+        tl.to(nacerTxt, {
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            duration: 3,
+            ease: "sine.out"
+        });
+
+        tl.to({}, {
+            duration: 2
+        });
+
+        // STEP 2
+        tl.addLabel("chapter02");
+        tl.call(() => setHeaderTheme("brown"), null, "chapter02");
+
+        tl.to(nacerBgWhite, {
+            autoAlpha: 1,
+            duration: 0.2,
+            ease: "sine.out"
+        });
+
+        tl.to(nacerBgWhite, {
+            scale: 30,
+            duration: 7,
+            ease: "sine.out"
+        });
+
+        tl.to(nacerTxt, {
+            autoAlpha: 0,
+            filter: "blur(20px)",
+            duration: 2,
+            ease: "sine.out"
+        }, "<+=1");
+
+        tl.to(guionLayer, {
+            autoAlpha: 1,
+            duration: 2,
+            ease: "sine.out"
+        }, "<+=1");
+
+        tl.to(guionGraphics, {
+            y: 0,
+            scale: 1,
+            duration: 7,
+            ease: "sine.inOut"
+        }, "<");
+
+        tl.to(guionContent, {
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            duration: 3,
+            ease: "sine.out"
+        }, "<+=2");
+
+        tl.to({}, {
+            duration: 2.5
+        });
+
+        // STEP 3
+        tl.addLabel("chapter03");
+        tl.call(() => setHeaderTheme("grey"), null, "chapter03");
+
+        tl.to(shuffledPixelParts, {
+            autoAlpha: 1,
+            duration: 0.01,
+            stagger: 0.045,
+            ease: "steps(1)"
+        });
+
+        tl.to(guionBgTransition, {
+            autoAlpha: 1,
+            duration: 2,
+            ease: "sine.out"
+        }, "<+=0.5");
+
+        tl.to(layer03, {
+            autoAlpha: 1,
+            duration: 1.5,
+            ease: "sine.out"
+        }, "<");
+
+        tl.to(guionContent, {
+            autoAlpha: 0,
+            filter: "blur(40px)",
+            duration: 2,
+            ease: "sine.out"
+        }, "<");
+
+        tl.to(apagaContent, {
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            duration: 3,
+            ease: "sine.out",
+            stagger: {
+                each: 0.18,
+                from: "start"
+            }
+        }, "<+=0.5");
+
+        tl.to({}, {
+            duration: 2.5
+        });
+
+        // STEP 4
+        tl.addLabel("chapter04");
+        tl.call(() => setHeaderTheme("grey"), null, "chapter04");
+
+        tl.to([guionImage, pixelSvg], {
+            autoAlpha: 0,
+            filter: "blur(18px)",
+            duration: 3,
+            ease: "sine.out"
+        });
+
+        tl.to(apagaContent, {
+            autoAlpha: 0,
+            filter: "blur(40px)",
+            duration: 2.5,
+            ease: "sine.out"
+        }, "<");
+
+        tl.to(layer04, {
+            autoAlpha: 1,
+            duration: 3,
+            ease: "sine.out"
+        }, "<+=0.4");
+
+        tl.to(juicioBrownSphere, {
+            autoAlpha: 1,
+            scale: 5,
+            filter: "blur(1px)",
+            duration: 4,
+            ease: "sine.out"
+        }, "<+=1.2");
+
+        tl.to({}, {
+            duration: 2.5
+        });
+
+        // STEP 5
+        tl.addLabel("chapter05");
+        tl.call(() => setHeaderTheme("grey"), null, "chapter05");
+
+        tl.to(juicioBrownSphere, {
+            autoAlpha: 1,
+            scale: 65,
+            filter: "blur(2px)",
+            duration: 7,
+            ease: "sine.out"
+        });
+
+        tl.to(layer05, {
+            autoAlpha: 1,
+            duration: 1,
+            ease: "sine.out"
+        }, "<+=2");
+
+        tl.to(nombreGradientBtm, {
+            scaleY: 1,
+            duration: 3,
+            ease: "sine.out"
+        }, "<+=0.3");
+
+        tl.to(nombreFlorGrupo, {
+            yPercent: 0,
+            duration: 7,
+            ease: "sine.out"
+        }, "<");
+
+        tl.to(nombreContent, {
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            duration: 3,
+            ease: "sine.out"
+        }, "<+=2");
+
+        tl.to({}, {
+            duration: 2.5
+        });
+
+        // STEP 6
+        // STEP 6
+        // El fondo cambia. Las flores borrosas hacen blur-out.
+        // Aparecen las flores activas + la central + las luces.
+
+        tl.to(nombreGradientBg, {
+            scaleY: 3,
+            duration: 5,
+            ease: "power4.in"
+        });
+
+        tl.to([nombreFlorHblur, nombreFlorMblur], {
+            autoAlpha: 0,
+            duration: 5,
+            ease: "power4.in"
+        }, "<=");
+
+        tl.to(nombreContent, {
+            autoAlpha: 0,
+            duration: 3,
+            filter: "blur(15px)"
+        }, "<+=2");
+
+        tl.addLabel("chapter06", "<+=2");
+        tl.call(() => setHeaderTheme("grey"), null, "chapter06");
+
+        tl.to(layer06, {
+            autoAlpha: 1,
+            duration: 0.1
+        }, "<=");
+
+        tl.to(pasoContent, {
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            duration: 4,
+            ease: "power2.out"
+        }, "<-=0.5");
+
+        tl.to(pasoFlor1, {
+            yPercent: 0,
+            duration: 8,
+            ease: "power2.out"
+        }, "<+=1");
+
+        tl.to(pasoFlor2, {
+            yPercent: 0,
+            duration: 8,
+            ease: "power2.out"
+        }, "<+=1");
+
+        tl.to(pasoFlor3, {
+            yPercent: 0,
+            duration: 8,
+            ease: "power2.out"
+        }, "<+=0.8");
+
+        tl.to(pasoFlor4, {
+            yPercent: 0,
+            duration: 8,
+            ease: "power2.out"
+        }, "<+=0.8");
+
+        tl.to(pasoFlor5, {
+            yPercent: 0,
+            duration: 8,
+            ease: "power2.out"
+        }, "<+=0.8");
+
+        tl.to(pasoBtn, {
+            autoAlpha: 1,
+            filter: "blur(0px)",
+            duration: 4,
+            ease: "power2.out"
+        }, "<+=1");
+
+        tl.addLabel("flowerLights");
+
+        function stopFlowerLightsLoopMobile() {
+            if (!hasStartedFlowerLightsLoop) return;
+
+            hasStartedFlowerLightsLoop = false;
+            flowerLightsLoop.pause();
+
+            if (flowerLightsFadeOutTween) {
+                flowerLightsFadeOutTween.kill();
+            }
+
+            flowerLightsFadeOutTween = gsap.to(allFlowersLights, {
+                autoAlpha: 0,
+                scale: 0.45,
+                filter: "blur(8px)",
+                duration: 1.4,
+                ease: "sine.inOut",
+                overwrite: "auto",
+                onComplete: () => {
+                    flowerLightsLoop.pause(0);
+
+                    gsap.set(allFlowersLights, {
+                        autoAlpha: 0,
+                        scale: 0.75,
+                        filter: "blur(0px)"
+                    });
+
+                    flowerLightsFadeOutTween = null;
+                }
+            });
         }
-    });
 
-    tl.to({}, {
-        duration: 1.5
-    });
+        tl.call(() => {
+            if (hasStartedFlowerLightsLoop) return;
 
-    tl.to(pasoGradientTool, {
-        scaleY: 1.5,
-        duration: 3,
-    });
+            if (flowerLightsFadeOutTween) {
+                flowerLightsFadeOutTween.kill();
+                flowerLightsFadeOutTween = null;
+            }
 
-    tl.addLabel("rest10");
+            gsap.set(allFlowersLights, {
+                autoAlpha: 0,
+                scale: 0.75,
+                filter: "blur(0px)"
+            });
 
-    tl.to({}, {
-        duration: 1
+            hasStartedFlowerLightsLoop = true;
+            flowerLightsLoop.restart();
+        }, null, "flowerLights");
+
+        tl.eventCallback("onUpdate", () => {
+            syncNarrativeIndicator(tl);
+
+            const flowerLightsTime = tl.labels.flowerLights;
+
+            if (typeof flowerLightsTime !== "number") return;
+
+            if (tl.time() >= flowerLightsTime && !hasStartedFlowerLightsLoop) {
+                if (flowerLightsFadeOutTween) {
+                    flowerLightsFadeOutTween.kill();
+                    flowerLightsFadeOutTween = null;
+                }
+
+                gsap.set(allFlowersLights, {
+                    autoAlpha: 0,
+                    scale: 0.75,
+                    filter: "blur(0px)"
+                });
+
+                hasStartedFlowerLightsLoop = true;
+                flowerLightsLoop.restart();
+            }
+
+            if (tl.time() < flowerLightsTime - 0.05) {
+                stopFlowerLightsLoopMobile();
+            }
+        });
+
+        tl.to({}, {
+            duration: 4
+        });
+
+        tl.to(pasoGradientTool, {
+            scaleY: 1.5,
+            duration: 4,
+            ease: "power2.out"
+        });
+
+        tl.to({}, {
+            duration: 2
+        });
+    }
+
+    /////////aqui
+    const mm = gsap.matchMedia();
+
+    mm.add({
+        isDesktop: "(min-width: 1280px)",
+        isMobile: "(max-width: 1279px)"
+    }, (context) => {
+        const { isDesktop } = context.conditions;
+
+        setInitialNarrativeState(isDesktop);
+
+        if (isDesktop) {
+            initNarrativeDesktop();
+        } else {
+            initNarrativeMobile();
+        }
     });
 }
 
@@ -2475,12 +3000,15 @@ async function initPage() {
 
     setInitialHeaderThemeForPage();
 
+    initHomeLogoReload();
+
     initFaqsMore();
     initFaqsAccordion();
 
     initHeroIntroMessages();
     initHeroAnimation();
     initNarrativeSequence();
+    initHeroCtaScroll();
     initHeaderThemeSections();
 
     await initToolAnimation();
