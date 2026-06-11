@@ -1,8 +1,4 @@
-/* TYPOGRAPHY */
-/* Define fuentes, tamaños de texto, y jerarquía tipográfica. */
-
 /* - - - F O N T S - - - */
-
 @font-face {
     font-family: "Editorial New";
     src: url("../assets/fonts/PPEditorialNew-Ultralight.woff2") format("woff2");
@@ -27,11 +23,9 @@
 }
 
 /* - - - V A R I A B L E S - - - */
-
 :root {
     --body-font: "Neue Montreal", arial, Helvetica, sans-serif;
     --heading-font: "Editorial New", Georgia, serif;
-
 
     /* - - FONT SIZE - - */
 
@@ -52,6 +46,10 @@
     --hf-2xs: 44px;
     --hf-3xs: 40px;
     --hf-4xs: 24px;
+
+
+    /* Optical Space */
+    --title-optical-scale: 1.016;
 }
 
 /* - - - B E T T E R    T Y P E    R E N D E R - - - */

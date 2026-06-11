@@ -195,25 +195,8 @@ body.header-is-grey {
 }
 
 
-
-
-
-
 /* - - - H E R O - - - */
 
-/* 1. SECTION */
-/* .hero {
-    position: relative;
-    height: 300vh;
-    background-color: var(--green);
-
-    .hero__sticky {
-        position: sticky;
-        top: 0;
-        height: 100svh;
-        overflow: hidden;
-    }
-} */
 
 .hero {
     position: relative;
@@ -222,7 +205,6 @@ body.header-is-grey {
 
     @media (min-width:1280px) {
         height: 270vh;
-
     }
 
     .hero__sticky {
@@ -338,7 +320,7 @@ body.header-is-grey {
     will-change: transform, opacity, filter;
 }
 
-/* ocultar */
+/* seteo para GSAP */
 body.is-intro-active .el-sticky,
 body.is-intro-active .hero-state--one,
 body.is-intro-active .hero-state--two,
@@ -467,23 +449,6 @@ body.is-intro-active .hero-intro-messages {
     will-change: transform;
 }
 
-/* .hero-purple-transition__color {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0px;
-
-    height: 20svh;
-
-    background: linear-gradient(to top,
-            var(--purple) 0%,
-            var(--purple) 50%,
-            transparent 100%);
-    opacity: 0;
-
-    transform-origin: bottom center;
-} */
-
 
 .hero-brown-transition__solid {
     position: absolute;
@@ -501,26 +466,7 @@ body.is-intro-active .hero-intro-messages {
     @media(min-width:1280px) {
         height: 10svh;
     }
-
-
 }
-
-
-/* .hero-brown-transition__solid {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -5px;
-
-    height: 8svh;
-    opacity: 0;
-
-    background-color: var(--brown);
-    transform-origin: bottom center;
-} */
-
-
-
 
 
 /* - - ESTADOS - - */
@@ -553,12 +499,13 @@ body.is-intro-active .hero-intro-messages {
         width: 100%;
         max-width: 100%;
         white-space: normal;
+        transform-origin: center center;
 
         @media(min-width:1280px) {
             white-space: nowrap;
             position: relative;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) scaleX(var(--title-optical-scale));
         }
 
         .char {
@@ -595,8 +542,6 @@ body.is-intro-active .hero-intro-messages {
     height: 100%;
     display: flex;
     align-items: center;
-
-
 
     @media(min-width:1280px) {
         align-items: flex-end;
@@ -668,40 +613,37 @@ body.is-intro-active .hero-intro-messages {
     overflow: visible;
     border: none;
 
-    @media(min-width:1280px) {
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+
+        border: 1px solid currentColor;
+        border-radius: inherit;
+
+        transform: scale(1);
+        transform-origin: center center;
+        transition: transform 0.6s ease;
+
+        pointer-events: none;
+    }
+
+    @media (min-width: 1280px) {
         top: 50%;
         bottom: auto;
         transform: translate(-50%, -50%);
-    }
-}
-
-.btn-hero {
-    cursor: pointer;
-}
-
-.btn-hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-
-    border: 1px solid currentColor;
-    border-radius: inherit;
-
-    transform: scale(1);
-    transform-origin: center center;
-    transition: transform 0.6s ease;
-
-    pointer-events: none;
-}
-
-@media (hover: none) and (pointer: coarse) {
-    .btn-hero::before {
-        transform: scale(1) !important;
-        transition: none;
+        cursor: pointer;
     }
 
-    .btn-hero:hover::before {
-        transform: scale(1) !important;
+    @media (hover: none) and (pointer: coarse) {
+        &::before {
+            transform: scale(1) !important;
+            transition: none;
+        }
+
+        &:hover::before {
+            transform: scale(1) !important;
+        }
     }
 }
 
@@ -754,15 +696,7 @@ body.is-intro-active .hero-intro-messages {
     visibility: hidden;
 
     transform-origin: center;
-
     pointer-events: none;
-
-    /* .brown-sphere__hover {
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        z-index: 2;
-    } */
 
     .brown-sphere__transition {
         position: absolute;
@@ -785,7 +719,6 @@ body.is-intro-active .hero-intro-messages {
 
     display: grid;
     grid-template-columns: 1fr 4fr 1fr;
-    /* align-items: center; */
 
     color: var(--grey);
     pointer-events: none;
@@ -818,7 +751,6 @@ body.is-intro-active .hero-intro-messages {
         color: inherit;
         transition: color 0.65s ease;
     }
-
 
 }
 
@@ -889,7 +821,6 @@ body.is-intro-active .hero-intro-messages {
 
 
 
-
 /* - - -  STEP 1: NACER  - - - */
 
 .narrative-step--01 {
@@ -909,7 +840,6 @@ body.is-intro-active .hero-intro-messages {
         left: 50%;
         top: 50%;
 
-        /* width: 2vmax; */
         width: 4vmax;
         aspect-ratio: 1/1;
         border-radius: 50%;
@@ -932,9 +862,6 @@ body.is-intro-active .hero-intro-messages {
         justify-content: flex-start;
         padding-bottom: var(--sp-l);
 
-
-
-
         @media (min-width:1280px) {
             padding-bottom: var(--sp-xl);
             justify-content: flex-end;
@@ -944,7 +871,6 @@ body.is-intro-active .hero-intro-messages {
             color: var(--grey);
             /* filter: blur(25px); */
             opacity: 0;
-
 
             @media(min-width:1280px) {
                 color: var(--grey);
@@ -958,7 +884,6 @@ body.is-intro-active .hero-intro-messages {
     opacity: 0.4;
     will-change: transform, opacity;
     animation: ghostPulse 5s ease-in-out infinite alternate;
-
 }
 
 @keyframes ghostPulse {
@@ -987,13 +912,10 @@ body.is-intro-active .hero-intro-messages {
         transform: translateX(-50%);
         pointer-events: none;
 
-
         @media(min-width:768px) {
             width: 60%;
             top: 65%;
         }
-
-
 
         @media(min-width:1280px) {
             top: 50%;
@@ -1035,10 +957,8 @@ body.is-intro-active .hero-intro-messages {
         .txt-block {
             color: var(--brown);
 
-
             @media(min-width:1280px) {
                 width: 35%;
-
             }
         }
     }
@@ -1106,7 +1026,6 @@ body.is-intro-active .hero-intro-messages {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-
     }
 
     .brown-sphere {
@@ -1134,50 +1053,73 @@ body.is-intro-active .hero-intro-messages {
 
 .narrative-step--05 {
 
-
     .step--05__graphics {
         position: absolute;
         inset: 0;
         pointer-events: none;
 
+        /* Flor + luces — Step 05 */
         .step--05_flor_grupo {
             position: absolute;
             inset: 0;
             z-index: 2;
             pointer-events: none;
 
-            .step--05_flor {
+            .step--05_flor_inner {
                 position: absolute;
+                pointer-events: none;
+
                 height: 57%;
-                left: 44%;
+                left: 50%;
                 bottom: 0%;
                 transform: translateX(-50%);
 
-                @media (min-width:768px) {
+                @media (min-width: 768px) {
                     height: 59%;
                     left: 48%;
                 }
 
-                @media (min-width:1280px) {
+                @media (min-width: 1280px) {
                     height: 65%;
                     left: 50%;
                 }
+            }
+
+            /* La lblur flor se mantiene enstep 6 */
+            .step--05_flor-lblur {
+                position: relative;
+                z-index: 2;
+                height: 100%;
 
                 img {
+                    display: block;
                     height: 100%;
                     width: auto;
                     max-width: none;
+                }
+            }
+
+            /* Flores desaparecen */
+            .step--05_flor-hblur,
+            .step--05_flor-mblur {
+                position: absolute;
+                inset: 0;
+                z-index: 2;
+                height: 100%;
+
+                img {
                     display: block;
-                    left: 50%;
-                    bottom: 0%;
+                    height: 100%;
+                    width: auto;
+                    max-width: none;
                 }
             }
 
             .step--05_luz {
                 position: absolute;
-                transform: translate(-50%, -50%);
-                pointer-events: none;
                 z-index: 3;
+                pointer-events: none;
+                transform: translate(-50%, -50%);
 
                 opacity: 0;
                 visibility: hidden;
@@ -1190,64 +1132,56 @@ body.is-intro-active .hero-intro-messages {
             }
 
             .step--05_luz-1 {
-
                 opacity: 0;
                 width: 0;
 
-                @media (min-width:1280px) {
+                @media (min-width: 1280px) {
                     opacity: 1;
-                    left: 52%;
-                    top: 52%;
-                    width: 3%;
+                    left: 54%;
+                    top: 27%;
+                    width: 8%;
                 }
             }
 
             .step--05_luz-2 {
-                left: 53%;
-                top: 59%;
-                width: 12%;
+                left: 27%;
+                top: 52%;
+                width: 8%;
 
-                @media (min-width:768px) {
-                    left: 50%;
-                    top: 59%;
+                @media (min-width: 768px) {
+                    left: 25%;
+                    top: 48%;
                     width: 8%;
                 }
 
-                @media (min-width:1280px) {
-                    left: 41.5%;
-                    top: 63%;
-                    width: 2%;
+                @media (min-width: 1280px) {
+                    left: 24%;
+                    top: 42%;
+                    width: 6%;
                 }
             }
 
             .step--05_luz-3 {
-
                 opacity: 0;
                 width: 0;
 
-                @media (min-width:1280px) {
+                @media (min-width: 1280px) {
                     opacity: 1;
-                    left: 56.1%;
-                    top: 40%;
+                    left: 72%;
+                    top: 7%;
                     width: 1%;
                 }
             }
 
             .step--05_luz-4 {
-                left: 81%;
-                top: 61%;
-                width: 4%;
+                left: 51%;
+                top: 29%;
+                width: 13%;
 
-                @media (min-width:768px) {
-                    left: 73%;
-                    top: 60%;
+                @media (min-width: 1280px) {
+                    left: 81%;
+                    top: 31%;
                     width: 4%;
-                }
-
-                @media (min-width:1280px) {
-                    left: 51%;
-                    top: 52%;
-                    width: 3%;
                 }
             }
 
@@ -1255,17 +1189,13 @@ body.is-intro-active .hero-intro-messages {
                 opacity: 0;
                 width: 0;
 
-
-                @media (min-width:1280px) {
+                @media (min-width: 1280px) {
                     opacity: 1;
-                    left: 57.5%;
-                    top: 63%;
-                    width: 1.8%;
-
+                    left: 50%;
+                    top: 30%;
+                    width: 8%;
                 }
             }
-
-
         }
 
     }
@@ -1333,7 +1263,6 @@ body.is-intro-active .hero-intro-messages {
 /* - - -  STEP 06: GUION   - - - */
 
 .narrative-step--06 {
-
     .btn {
         position: absolute;
         left: 50%;
@@ -1373,59 +1302,6 @@ body.is-intro-active .hero-intro-messages {
         }
     }
 
-    /* .step--06-flor-1 {
-        left: 6.5%;
-        height: 60%;
-
-        @media(min-width:1280px) {
-            left: 4%;
-            height: 90%;
-        }
-
-    } */
-
-    /* .step--06-flor-2 {
-        opacity: 0;
-
-        @media(min-width:1280px) {
-            opacity: 1;
-            left: 24%;
-        }
-    } */
-
-    /* .step--06-flor-3 {
-        opacity: 0;
-
-        @media(min-width:1280px) {
-            opacity: 1;
-            left: 63%;
-            height: 80%;
-        }
-    } */
-
-    /* .step--06-flor-4 {
-        left: 66%;
-        height: 30%;
-
-        @media(min-width:1280px) {
-            left: 80%;
-            height: 50%;
-        }
-    } */
-
-    /* .step--06-flor-5 {
-        left: 88%;
-        height: 50%;
-
-        @media(min-width:1280px) {
-            left: 92%;
-            height: 80%;
-        }
-    } */
-
-    /* .step--06-luz-1 {
-        opacity: 0%;
-    } */
 
     .step--06__content {
         height: 100%;
@@ -1575,7 +1451,6 @@ body.is-intro-active .hero-intro-messages {
         top: 19%;
         width: 7%;
     }
-
 }
 
 .step--06-luz-2 {
@@ -1599,7 +1474,6 @@ body.is-intro-active .hero-intro-messages {
         top: 75%;
         width: 14%;
     }
-
 }
 
 .step--06-luz-4 {
@@ -1649,67 +1523,14 @@ body.is-intro-active .hero-intro-messages {
     }
 }
 
-
-/* quitar scroll en página herramienta */
-body[data-page="herramienta"] .tool {
-    height: 100svh;
-    min-height: 100svh;
-}
-
-
-body[data-page="herramienta"] .tool>.sect-sticky {
-    position: relative;
-    top: auto;
-    height: 100svh;
-}
-
-
-/* setear */
-body[data-page="herramienta"] .tool .hf-l,
-body[data-page="herramienta"] .tool .txt-block,
-body[data-page="herramienta"] .tool .btn {
-    opacity: 0;
-    visibility: hidden;
-}
-
-
-/* DEGRADADO INICIO SECCIÓN FAQS */
-
-.tool_gradient {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    width: 100%;
-    height: 100%;
-
-    pointer-events: none;
-}
-
-.tool_gradient__white {
-    position: absolute;
-    inset: 0;
-
-    transform-origin: bottom;
-
-    background: linear-gradient(to top,
-            var(--white) 0%,
-            var(--white) 2%,
-            transparent 10%);
-}
-
-
 /* - - -  F A Q S   - - - */
 
 .sec_faqs {
     background-color: var(--white);
     padding-top: var(--sp-l);
-    /* espacio con gradient inf */
     padding-bottom: calc(var(--sp-l) + 12svh);
     position: relative;
     overflow: hidden;
-    /* min-height: 90dvh; */
 
     .hf-l {
         line-height: 1;
@@ -1739,7 +1560,6 @@ body[data-page="herramienta"] .tool .btn {
                 grid-template-columns: 1fr 5fr 2fr;
             }
 
-
             .dropdown_faqs__q_number {
                 justify-self: start;
             }
@@ -1751,7 +1571,6 @@ body[data-page="herramienta"] .tool .btn {
             .dropdown_faqs__q_icon {
                 justify-self: end;
             }
-
         }
 
         .dropdown_faqs_answer {
@@ -1804,7 +1623,6 @@ body[data-page="herramienta"] .tool .btn {
 }
 
 .faqs_gradient {
-
     position: absolute;
     left: 0;
     right: 0;
@@ -1815,8 +1633,6 @@ body[data-page="herramienta"] .tool .btn {
 
     pointer-events: none;
     z-index: 1;
-
-
 }
 
 .faqs_gradient__brown {
@@ -1864,9 +1680,6 @@ body[data-page="herramienta"] .tool .btn {
 
     background: var(--brown);
 }
-
-
-
 
 /* - - - T O O L - - - */
 .tool {
@@ -2034,6 +1847,53 @@ body[data-page="herramienta"] .tool .btn {
 }
 
 
+/* quitar scroll en página herramienta */
+body[data-page="herramienta"] .tool {
+    height: 100svh;
+    min-height: 100svh;
+}
+
+body[data-page="herramienta"] .tool>.sect-sticky {
+    position: relative;
+    top: auto;
+    height: 100svh;
+}
+
+/* setear */
+body[data-page="herramienta"] .tool .hf-l,
+body[data-page="herramienta"] .tool .txt-block,
+body[data-page="herramienta"] .tool .btn {
+    opacity: 0;
+    visibility: hidden;
+}
+
+
+/* DEGRADADO INICIO SECCIÓN FAQS */
+.tool_gradient {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+}
+
+.tool_gradient__white {
+    position: absolute;
+    inset: 0;
+
+    transform-origin: bottom;
+
+    background: linear-gradient(to top,
+            var(--white) 0%,
+            var(--white) 2%,
+            transparent 10%);
+}
+
+
 
 /* - - - R E P O S I T O R Y - - - */
 
@@ -2182,7 +2042,6 @@ body[data-page="herramienta"] .tool .btn {
             opacity: 0;
         }
 
-
         .repo_contacts_row_name {
             font-family: var(--heading-font);
             font-size: var(--hf-4xs);
@@ -2227,7 +2086,6 @@ body[data-page="herramienta"] .tool .btn {
 
             @media (min-width: 1280px) {
                 transition: all 0.7s ease;
-
             }
         }
 
@@ -2269,8 +2127,7 @@ body[data-page="herramienta"] .tool .btn {
 }
 
 
-
-/* ocultar */
+/* seter para GSAP */
 body[data-page="busco-ayuda"] .repo_hdr .hf-l,
 body[data-page="busco-ayuda"] .repo_hdr .txt-block,
 body[data-page="busco-ayuda"] .repo_contacts_row {
@@ -2286,14 +2143,22 @@ body[data-page="busco-ayuda"] .repo_contacts_row {
     position: relative;
     z-index: 100;
 
-
+    @media(min-width:1280px) {
+        height: 100svh;
+    }
 
     .ftr-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        display: grid;
+        grid-template-rows: auto 1fr;
         color: var(--green);
         height: 105svh;
+
+        @media(min-width:1280px) {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100svh;
+        }
     }
 
     .ftr-nav {
@@ -2325,35 +2190,43 @@ body[data-page="busco-ayuda"] .repo_contacts_row {
         }
 
         @media(min-width:1280px) {
-
             font-size: var(--bf-xs);
         }
-
-
-
     }
 
     .ftr-end {
+        display: grid;
+        grid-template-rows: 1fr auto auto auto;
+        min-height: 0;
+
+        @media(min-width:1280px) {
+            display: block;
+            min-height: initial;
+        }
 
         .hf-xl {
+            --title-optical-scale: 1.012;
+
+            align-self: center;
+            justify-self: center;
+
             position: relative;
-            left: 50%;
-            bottom: 5%;
-            transform: translate(-50%, -50%);
+            left: auto;
+            bottom: auto;
+            transform: none;
+            transform-origin: center center;
 
             opacity: 0;
             visibility: hidden;
             white-space: normal;
-
-            @media(min-width:768px) {
-                bottom: 45%;
-            }
+            text-align: center;
 
             @media(min-width:1280px) {
                 position: relative;
                 left: 50%;
                 bottom: auto;
-                transform: translateX(-50%);
+                transform: translateX(-50%) scaleX(var(--title-optical-scale));
+                white-space: nowrap;
             }
 
             .char {
@@ -2376,20 +2249,16 @@ body[data-page="busco-ayuda"] .repo_contacts_row {
         }
 
         .ftr-end_participate {
-
             display: flex;
             flex-direction: column;
             padding: var(--sp-xs) 0;
             border-bottom: 1px solid var(--dark-green);
             text-wrap: pretty;
 
-
             @media(min-width:1280px) {
-
                 display: grid;
                 grid-template-columns: 2fr 4fr;
                 padding: var(--sp-xs) 0;
-
             }
 
             .participant_list {
