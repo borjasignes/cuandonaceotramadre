@@ -1155,7 +1155,7 @@ body.is-intro-active .hero-intro-messages {
                 }
 
                 @media (min-width: 1280px) {
-                    left: 24%;
+                    left: 26%;
                     top: 42%;
                     width: 6%;
                 }
@@ -1167,15 +1167,15 @@ body.is-intro-active .hero-intro-messages {
 
                 @media (min-width: 1280px) {
                     opacity: 1;
-                    left: 72%;
+                    left: 66%;
                     top: 7%;
-                    width: 1%;
+                    width: 4%;
                 }
             }
 
             .step--05_luz-4 {
                 left: 51%;
-                top: 29%;
+                top: 30%;
                 width: 13%;
 
                 @media (min-width: 1280px) {
@@ -1494,8 +1494,8 @@ body.is-intro-active .hero-intro-messages {
     width: 25%;
 
     @media(min-width:1280px) {
-        left: 47%;
-        top: 34%;
+        left: 49%;
+        top: 32%;
         width: 15%;
     }
 }
