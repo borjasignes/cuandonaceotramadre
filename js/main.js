@@ -266,7 +266,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 function shouldShowFullIntro() {
     const introLastSeen = localStorage.getItem("cnomIntroLastSeen");
     const now = Date.now();
-    const thirtyMinutes = 1 * 60 * 1000;
+    const thirtyMinutes = 0.2 * 60 * 1000;
 
     if (!introLastSeen) return true;
 
