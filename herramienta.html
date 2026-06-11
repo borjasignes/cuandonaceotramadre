@@ -2,12 +2,32 @@
 <html lang="es">
 
 <head>
+    <!------ META ------>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Cuando Nace Otra Madre | Herramienta</title>
 
-    <!-- Favicon -->
+    <title>Herramienta | Cuando Nace Otra Madre</title>
+
+    <meta name="description"
+        content="Una herramienta para mirar, paso a paso, cómo estás viviendo el posparto, reconocer señales de malestar emocional y poner palabras a lo que sientes." />
+
+    <!-- Open Graph: Compartir en RRSS -->
+    <meta property="og:title" content="¿Qué forma tiene lo que sientes? | Cuando Nace Otra Madre" />
+    <meta property="og:description"
+        content="Una herramienta para mirar, paso a paso, cómo estás viviendo el posparto, reconocer señales de malestar emocional y abrir la posibilidad de pedir acompañamiento." />
+    <meta property="og:image" content="https://cuandonaceotramadre.vercel.app/assets/og/og-image.jpg" />
+    <meta property="og:url" content="https://cuandonaceotramadre.vercel.app/herramienta.html" />
+    <meta property="og:type" content="website" />
+
+    <!-- Open Graph: *específico X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="¿Qué forma tiene lo que sientes? | Cuando Nace Otra Madre" />
+    <meta name="twitter:description"
+        content="Una herramienta para mirar, paso a paso, cómo estás viviendo el posparto, reconocer señales de malestar emocional y abrir la posibilidad de pedir acompañamiento." />
+    <meta name="twitter:image" content="https://cuandonaceotramadre.vercel.app/assets/og/og-image.jpg" />
+
+    <!------ FAVICON ------>
     <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
     <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
@@ -15,34 +35,36 @@
     <meta name="apple-mobile-web-app-title" content="Cnom" />
     <link rel="manifest" href="assets/favicon/site.webmanifest" />
 
-    <!-- CSS -->
+    <!------ CSS ------>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body data-page="herramienta">
     <div class="page-transition-bg"></div>
 
-    <!-- Nav -->
+    <!------  ░░░░  N A V  ░░░░  ------>
     <div data-include="components/header.html"></div>
 
     <main id="swup" class="transition-fade" data-page="herramienta">
         <div data-include="components/tool.html"></div>
+
+        <!------  ░░░░  N O I S E  ░░░░  ------>
+        <div class="noise" aria-hidden="true"></div>
     </main>
 
-    <!------  ░░░░  N O I S E  ░░░░  ------>
-    <div class="noise" aria-hidden="true"></div>
 
-    <!-- Footer -->
-    <!-- <div data-include="components/footer.html"></div> -->
 
-    <!-- JS -->
-    <!-- JS -->
+    <!------  ░░░░  J S  ░░░░  ------>
+    <!------ GSAP ------>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
 
+    <!------ SWUP ------>
     <script src="https://unpkg.com/swup@4/dist/Swup.umd.js"></script>
+
+    <!------ JS ------>
     <script type="module" src="js/main.js"></script>
 </body>
 

@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 
+<!------  ░░░░  H E A D  ░░░░  ------>
+
 <head>
 
-    <!-- Scroll Restoration -->
+    <!------ SCROLL RESTORATION ------>
+    <!-- la web recarga en el top de la página -->
     <script>
         if ("scrollRestoration" in history) {
             history.scrollRestoration = "manual";
@@ -12,14 +15,32 @@
         window.scrollTo(0, 0);
     </script>
 
-    <!-- Meta -->
+    <!------ META ------>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <title>Cuando Nace Otra Madre</title>
 
-    <!-- Favicon -->
+    <meta name="description"
+        content="Una guía emocional para reconocer las señales de la depresión postparto y acompañar a las madres desde un lugar más humano, sensible y cuidado." />
+
+    <!-- Open Graph: Compartir en RRSS -->
+    <meta property="og:title" content="Cuando Nace Otra Madre" />
+    <meta property="og:description"
+        content="Una experiencia emocional para reconocer las señales de la depresión postparto y acompañar a las madres en una etapa tan delicada como invisible." />
+    <meta property="og:image" content="https://cuandonaceotramadre.vercel.app/assets/og/og-image.jpg" />
+    <meta property="og:url" content="https://cuandonaceotramadre.vercel.app/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Open Graph: *específico X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cuando Nace Otra Madre" />
+    <meta name="twitter:description"
+        content="Una experiencia emocional para reconocer las señales de la depresión postparto y acompañar a las madres en una etapa tan delicada como invisible." />
+    <meta name="twitter:image" content="https://cuandonaceotramadre.vercel.app/assets/og/og-image.jpg" />
+
+    <!------ FAVICON ------>
     <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
     <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
@@ -27,7 +48,7 @@
     <meta name="apple-mobile-web-app-title" content="Cnom" />
     <link rel="manifest" href="assets/favicon/site.webmanifest" />
 
-    <!-- CSS -->
+    <!------ CSS ------>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -38,20 +59,22 @@
     <!------  ░░░░  H E A D E R  ░░░░  ------>
     <div data-include="components/header.html"></div>
 
-    <!-- MAIN -->
+    <!------  ░░░░  M A I N  ░░░░  ------>
     <main id="swup" class="transition-fade" data-page="home">
 
         <!------  ░░░░  H E R O  :  I M G + B A C K G R O U N D  ░░░░  ------>
         <section class="hero">
             <div class="hero__sticky">
 
-                <!------  02. LOAD INICIAL  ------>
-
+                <!------  1. LOAD INICIAL  ------>
                 <div class="hero-intro-messages" data-hero-intro-messages>
+
+                    <!-- 1.1 mensaje intro 1 -->
                     <div class="hero-intro-message hero-intro-message--01 hf-base">
                         <p> Hasta el 50% de los casos de depresión postparto no llegan a diagnosticarse.</p>
                     </div>
 
+                    <!-- 1.2 mensaje intro 2 -->
                     <div class="hero-intro-message hero-intro-message--02 hf-base">
                         <p>
                             <span class="intro-message-02__main">Muchas madres no reconocen sus síntomas</span>
@@ -60,18 +83,19 @@
                         </p>
                     </div>
 
+                    <!-- 1.3 fuente mensajes intro -->
                     <div class="hero-intro-source">Fuente: NIH / StatPearls, Perinatal Depression, Carlson, Mughal,
                         Azhar & Siddiqui. 2025.</div>
 
+                    <!-- 1.4 porcentaje % progreso -->
                     <div class="hero-intro-progress">
                         03%
                     </div>
                 </div>
 
-
-                <!------ 01. GRÁFICOS ------>
+                <!------ 2. GRÁFICOS ------>
                 <div class="hero-graphics">
-                    <!-- 1.1 imagen de fondo -->
+                    <!-- 2.1 imagen de fondo -->
                     <picture class="hero-pct">
                         <source srcset="assets/img/home/header-madre.avif" type="image/avif">
                         <source srcset="assets/img/home/header-madre.webp" type="image/webp">
@@ -85,38 +109,26 @@
                             alt="ilustración mujer embarazada desenfocada">
                     </picture>
 
-                    <!-- <picture class="hero-pct">
-                        <source srcset="assets/img/home/header-madre.avif" type="image/avif">
-                        <source srcset="assets/img/home/header-madre.webp" type="image/webp">
-                        <img src="assets/img/home/header-madre.png" alt="ilustración mujer embarazada desenfocada">
-                    </picture> -->
-
-                    <!-- 1.2 degradado inferior -->
+                    <!-- 2.2 degradado inferior -->
                     <div class="hero-gradient">
                         <div class="hero-gradient__soft"></div>
                         <div class="hero-gradient__strong"></div>
                     </div>
                 </div>
 
-                <!-- 1.3 degradado intro narrativa -->
+                <!-- 2.3 degradado intro narrativa -->
                 <div class="hero-brown-transition">
-
-                    <!-- <div class="hero-purple-transition__color"></div> -->
                     <div class="hero-brown-transition__solid"></div>
                     <div class="hero-brown-transition__gradient"></div>
-
-
-
                 </div>
 
-
-                <!------  03. HERO: ESTADO 1  ------>
+                <!------  3. HERO: ESTADO 1  ------>
                 <div class="wrap hero-state hero-state--one grey">
                     <h1 class="hf-xl">Cuando Nace Otra Madre</h1>
                     <p class="intro">Una guía emocional para reconocer y acompañar la depresión postparto.</p>
                 </div>
 
-                <!------  04. HERO: ESTADO 2  ------>
+                <!------  4. HERO: ESTADO 2  ------>
                 <div class="wrap hero-state hero-state--two">
                     <div class="hero-state--two_content">
                         <div class="hero-state--two__content">
@@ -150,17 +162,10 @@
                     <button class="btn-hero btn-hero--desktop btn" type="button">
                         Explorar
                     </button>
-                    <!------  04. DEGRADADO : INICIO NARRATIVA  ------>
-                    <!-- <div class="brown-sphere brown-sphere__hover"></div>
-                    <div class="brown-sphere brown-sphere__transition"></div> -->
                 </div>
-
 
             </div>
         </section>
-
-
-
 
         <!------  ░░░░  I N D I C A D O R  :   N A R R A T I V A  ░░░░  ------>
         <div class="indicator wrap">
@@ -171,31 +176,22 @@
 
         <!------  ░░░░  S E C T . 1  :   N A R R A T I V A  ░░░░  ------>
 
-        <!------  S E Q U E N C E   0 1 => 0 6  ------>
+        <!------  S E C U E N C I A   0 1 => 0 6  ------>
         <section id="narrative-step__1" class="narrative-sequence narrative-sequence--all">
             <div class="sect-sticky">
 
-                <!------  S T E P  0 1  :  N A C E R  ------>
+                <!------ ░ S T E P  0 1  :  N A C E R ░ ------>
                 <div class="narrative-step narrative-step--01 narrative-layer narrative-layer--01" data-chapter="01"
                     data-chapter-title="Nacer">
 
                     <!------ 1.0 GRÁFICOS ------>
-
-                    <!-- 1.1 luz -->
+                    <!-- 1.1 luz central -->
                     <picture class="step--01__graphics">
                         <source srcset="assets/img/narrative/step-01-light.avif" type="image/avif">
                         <source srcset="assets/img/narrative/step-01-light.webp" type="image/webp">
                         <img src="assets/img/narrative/step-01-light.png" alt="canal de parto" class="">
                     </picture>
                     <div class="white-sphere"></div>
-
-
-                    <!-- 1.2 luz "ghost" -->
-                    <!-- <picture class="step--01__graphics">
-                        <source srcset="assets/img/narrative/step-01-light.avif" type="image/avif">
-                        <source srcset="assets/img/narrative/step-01-light.webp" type="image/webp">
-                        <img src="assets/img/narrative/step-01-light.png" alt="canal de parto" class="ghost_01">
-                    </picture> -->
 
                     <!------ 2.0 CONTENIDO ------>
                     <div class="step--01__content wrap">
@@ -216,7 +212,7 @@
                     </div>
                 </div>
 
-                <!------  S T E P  0 2  :  G U I O N  ------>
+                <!------ ░ S T E P  0 2  :  G U I O N ░ ------>
                 <div class="narrative-step narrative-step--02 narrative-layer narrative-layer--02" data-chapter="02"
                     data-chapter-title="El guion de la felicidad">
 
@@ -224,12 +220,14 @@
                     <div class="step--02__bg-transition"></div>
                     <div class="step--02__graphics">
 
+                        <!-- 1.1 Flor morada central -->
                         <picture class="step--02__img">
                             <source srcset="assets/img/narrative/step-02-flor.avif" type="image/avif">
                             <source srcset="assets/img/narrative/step-02-flor.webp" type="image/webp">
                             <img src="assets/img/narrative/step-02-flor.png" alt="flor morada desenfocada" class="">
                         </picture>
 
+                        <!-- 1.2 Flor pixel -->
                         <svg class="step--02__pixel-svg" width="357" height="350" viewBox="0 0 357 350" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <rect x="163.225" y="349.144" width="15.7115" height="14.8386"
@@ -298,12 +296,9 @@
                     </div>
                 </div>
 
-
-
-                <!------  S T E P  0 3  :  A P A G A  ------>
+                <!------ ░ S T E P  0 3  :  A P A G A ░ ------>
                 <div class="narrative-step  narrative-step--03 narrative-layer narrative-layer--03" data-chapter="03"
                     data-chapter-title="Cuando algo se apaga">
-
 
                     <!------ 2.0 CONTENIDO ------>
                     <div class="step--03__content wrap">
@@ -327,13 +322,14 @@
                     </div>
                 </div>
 
-
-                <!------  S T E P  0 4  :  J U I C I O  ------>
+                <!------ ░ S T E P  0 4  :  J U I C I O ░ ------>
                 <div class="narrative-step narrative-step--04 narrative-layer narrative-layer--04" data-chapter="04"
                     data-chapter-title="El juicio invisible">
 
                     <!------ 1.0 GRÁFICOS ------>
+                    <!-- 1.1 esfera morada -->
                     <div class="purple-sphere"></div>
+                    <!-- 1.2 esfera marrón -->
                     <div class="brown-sphere"></div>
 
                     <!------ 2.0 CONTENIDO ------>
@@ -355,11 +351,13 @@
                     </div>
                 </div>
 
-                <!------  S T E P  0 5  :  N O M B R E  ------>
+                <!------ ░ S T E P  0 5  :  N O M B R E ░ ------>
                 <div class="narrative-step narrative-step--05 narrative-layer narrative-layer--05" data-chapter="05"
                     data-chapter-title="Darle nombre">
+
                     <!------ 1.0 GRÁFICOS ------>
                     <div class="step--05__graphics">
+
 
                         <!-- 1.1 Degradados -->
                         <div class="step--05_gradient">
@@ -370,70 +368,72 @@
                         </div>
 
                         <div class="step--05_flor_grupo">
-                            <!-- 2. Imáagenes -->
-                            <!-- 2.1 estado 1: ++ desenfocado -->
-                            <picture class="step--05_flor step--05_flor-hblur">
-                                <source srcset="assets/img/narrative/step-05-1-flor.avif" type="image/avif">
-                                <source srcset="assets/img/narrative/step-05-1-flor.webp" type="image/webp">
-                                <img src="assets/img/narrative/step-05-1-flor.png" alt="flor amarilla desenfocada"
-                                    class="">
-                            </picture>
+                            <div class="step--05_flor_inner">
+                                <!-- 2. Imágenes -->
+                                <!-- 2.1.1 estado 1: ++ desenfocado -->
+                                <picture class="step--05_flor step--05_flor-hblur">
+                                    <source srcset="assets/img/narrative/step-05-1-flor.avif" type="image/avif">
+                                    <source srcset="assets/img/narrative/step-05-1-flor.webp" type="image/webp">
+                                    <img src="assets/img/narrative/step-05-1-flor.png" alt="flor amarilla desenfocada"
+                                        class="">
+                                </picture>
 
-                            <!-- 2.2 estado 2: + desenfocado -->
-                            <picture class="step--05_flor step--05_flor-mblur">
-                                <source srcset="assets/img/narrative/step-05-2-flor.avif" type="image/avif">
-                                <source srcset="assets/img/narrative/step-05-2-flor.webp" type="image/webp">
-                                <img src="assets/img/narrative/step-05-2-flor.png" alt="flor amarilla desenfocada"
-                                    class="">
-                            </picture>
+                                <!-- 2.1.2 estado 2: + desenfocado -->
+                                <picture class="step--05_flor step--05_flor-mblur">
+                                    <source srcset="assets/img/narrative/step-05-2-flor.avif" type="image/avif">
+                                    <source srcset="assets/img/narrative/step-05-2-flor.webp" type="image/webp">
+                                    <img src="assets/img/narrative/step-05-2-flor.png" alt="flor amarilla desenfocada"
+                                        class="">
+                                </picture>
 
-                            <!-- 2.2 luz de la flor principal 1 -->
-                            <picture class="step--05_luz step--05_luz-1">
-                                <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
-                                <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
-                                <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
-                                    class="">
-                            </picture>
+                                <!-- 2.2.1 luz de la flor principal 1 -->
+                                <picture class="step--05_luz step--05_luz-1">
+                                    <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
+                                    <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
+                                    <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
+                                        class="">
+                                </picture>
 
-                            <!-- 2.2 luz de la flor principal 2 -->
-                            <picture class="step--05_luz step--05_luz-2">
-                                <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
-                                <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
-                                <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
-                                    class="">
-                            </picture>
+                                <!-- 2.2.2 luz de la flor principal 2 -->
+                                <picture class="step--05_luz step--05_luz-2">
+                                    <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
+                                    <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
+                                    <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
+                                        class="">
+                                </picture>
 
-                            <!-- 2.2 luz de la flor principal 3 -->
-                            <picture class="step--05_luz step--05_luz-3">
-                                <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
-                                <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
-                                <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
-                                    class="">
-                            </picture>
+                                <!-- 2.2.3 luz de la flor principal 3 -->
+                                <picture class="step--05_luz step--05_luz-3">
+                                    <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
+                                    <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
+                                    <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
+                                        class="">
+                                </picture>
 
-                            <!-- 2.2 luz de la flor principal 4 -->
-                            <picture class="step--05_luz step--05_luz-4">
-                                <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
-                                <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
-                                <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
-                                    class="">
-                            </picture>
+                                <!-- 2.2.4 luz de la flor principal 4 -->
+                                <picture class="step--05_luz step--05_luz-4">
+                                    <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
+                                    <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
+                                    <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
+                                        class="">
+                                </picture>
 
-                            <!-- 2.2 luz de la flor principal 5 -->
-                            <picture class="step--05_luz step--05_luz-5">
-                                <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
-                                <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
-                                <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
-                                    class="">
-                            </picture>
+                                <!-- 2.2.5 luz de la flor principal 5 -->
+                                <picture class="step--05_luz step--05_luz-5">
+                                    <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
+                                    <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
+                                    <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
+                                        class="">
+                                </picture>
 
-                            <!-- 2.3 estado 3: desenfocado -->
-                            <picture class="step--05_flor step--05_flor-lblur">
-                                <source srcset="assets/img/narrative/step-05-3-flor.avif" type="image/avif">
-                                <source srcset="assets/img/narrative/step-05-3-flor.webp" type="image/webp">
-                                <img src="assets/img/narrative/step-05-3-flor.png" alt="flor amarilla desenfocada"
-                                    class="">
-                            </picture>
+                                <!-- 2.1.3 estado 3: flor desenfocada -->
+                                <picture class="step--05_flor step--05_flor-lblur">
+                                    <source srcset="assets/img/narrative/step-05-3-flor.avif" type="image/avif">
+                                    <source srcset="assets/img/narrative/step-05-3-flor.webp" type="image/webp">
+                                    <img src="assets/img/narrative/step-05-3-flor.png" alt="flor amarilla desenfocada"
+                                        class="">
+                                </picture>
+                            </div>
                         </div>
                     </div>
 
@@ -471,6 +471,7 @@
                                     alt="flor amarilla desenfocada izquierda" class="">
                             </picture>
                         </div>
+
                         <!-- 1.1.2 flor 2 -->
                         <div class="step--06-flor-wrap step--06-flor-wrap-2">
                             <picture class="step--06_flor step--06-flor-2">
@@ -480,7 +481,7 @@
                                     class="">
                             </picture>
 
-                            <!-- 1.1.6 luces flor 1 -->
+                            <!-- luz 1 -->
                             <picture class="step--06-luz step--06-luz-1">
                                 <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
                                 <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
@@ -488,15 +489,13 @@
                                     class="">
                             </picture>
 
-                            <!-- 1.1.6 luces flor 2 -->
+                            <!-- luz 2 -->
                             <picture class="step--06-luz step--06-luz-2">
                                 <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
                                 <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
                                 <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor"
                                     class="">
                             </picture>
-
-
                         </div>
 
                         <!-- 1.1.3 flor 3 -->
@@ -525,7 +524,7 @@
                                     alt="flor amarilla desenfocada centro-derecha" class="">
                             </picture>
 
-                            <!-- 1.1.6 luces flor 3 -->
+                            <!-- luz 3 -->
                             <picture class="step--06-luz step--06-luz-4">
                                 <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
                                 <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
@@ -533,7 +532,6 @@
                                     class="">
                             </picture>
                         </div>
-
 
                         <!-- 1.1.5 flor 5 -->
                         <div class="step--06-flor-wrap step--06-flor-wrap-5">
@@ -544,7 +542,7 @@
                                     alt="flor amarilla desenfocada derecha" class="">
                             </picture>
 
-                            <!-- 1.1.6 luces flor 4 -->
+                            <!-- luz 4 -->
                             <picture class="step--06-luz step--06-luz-5">
                                 <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
                                 <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
@@ -553,17 +551,10 @@
                             </picture>
                         </div>
 
-                        <!-- degradado inicio sección tool -->
+                        <!-- 1.2 degradado inicio sección tool -->
                         <div class="step--06_gradient">
                             <div class="step--6_gradient__tool"></div>
                         </div>
-
-                        <!-- 1.1.6 luces flor -->
-                        <!-- <picture class="step--06_flor step--06-luz-1">
-                            <source srcset="assets/img/narrative/step-06-light.avif" type="image/avif">
-                            <source srcset="assets/img/narrative/step-06-light.webp" type="image/webp">
-                            <img src="assets/img/narrative/step-06-light.png" alt="luz que ilumina la flor" class="">
-                        </picture> -->
                     </div>
 
                     <!------ 2.0 CONTENIDO ------>
@@ -1104,17 +1095,17 @@
 
     </main>
 
-
-
     <!------  ░░░░  J S  ░░░░  ------>
+    <!------ GSAP ------>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
 
-
+    <!------ SWUP ------>
     <script src="https://unpkg.com/swup@4/dist/Swup.umd.js"></script>
 
+    <!------ JS ------>
     <script type="module" src="js/main.js"></script>
 </body>
 
