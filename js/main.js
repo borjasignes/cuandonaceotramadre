@@ -1,21 +1,23 @@
 /* ARCHIVO PRINCIPAL DE JAVASCRIPT */
-// localStorage.removeItem("cnomIntroLastSeen")
-// location.reload()
 
+// Importar función que carga reutilizables (header / footer)
 import { loadIncludes } from "./includes.js";
 
-
-//Scroll restoration
+// ░░░░░░░░ SCROLL RESTORATION
+// Evita que navegador restaure una posición de scroll anterior
 if ("scrollRestoration" in history) {
     history.scrollRestoration = "manual";
 }
 
+// Forzar scroll arriba al recargar / salir
 window.addEventListener("beforeunload", () => {
     window.scrollTo(0, 0);
 });
 
-// FAQS - VER MÁS
-
+// ░░░░░░░░ FAQS — VER MÁS
+// Desplegar preguntas frecuentes ocultas y eliminar "+"
+// Transición suave
+// Refresh ScrollTrigger por cambio de altura de la pág.
 function initFaqsMore() {
     const moreButton = document.querySelector(".btn-more");
     const extraFaqs = document.querySelector(".faqs_more");
@@ -30,16 +32,17 @@ function initFaqsMore() {
         const buttonHeight = moreButton.offsetHeight;
         const buttonMarginTop = gsap.getProperty(moreButton, "marginTop");
 
-        // 1. Preparar botón para que pueda colapsar sin salto
+        // --> GSAP.SET
+        // Botón "+"
         gsap.set(moreButton, {
             height: buttonHeight,
             marginTop: buttonMarginTop,
             overflow: "hidden"
         });
 
-        // 2. Mostrar el bloque extra, pero sin ocupar espacio visual todavía
         extraFaqs.hidden = false;
 
+        // Bloque FAQs extra
         gsap.set(extraFaqs, {
             height: 0,
             marginTop: 0,
@@ -47,6 +50,7 @@ function initFaqsMore() {
             autoAlpha: 1
         });
 
+        // Items FAQs extra
         gsap.set(extraFaqItems, {
             autoAlpha: 0,
             y: 24,
@@ -55,6 +59,7 @@ function initFaqsMore() {
 
         const extraFaqsHeight = extraFaqs.scrollHeight;
 
+        /// --> TIMELINE
         const tl = gsap.timeline({
             onComplete: () => {
                 moreButton.hidden = true;
@@ -68,7 +73,7 @@ function initFaqsMore() {
             }
         });
 
-        // 3. Sale visualmente el botón
+        // 1. Desaparece botón
         tl.to(moreButton, {
             autoAlpha: 0,
             y: 18,
@@ -77,7 +82,7 @@ function initFaqsMore() {
             ease: "power3.out"
         });
 
-        // 4. El espacio del botón desaparece suavemente
+        // 2. Desaparece espacio botón suave
         tl.to(moreButton, {
             height: 0,
             marginTop: 0,
@@ -88,7 +93,7 @@ function initFaqsMore() {
             ease: "power2.inOut"
         }, "<+=0.1");
 
-        // 5. Aparece el espacio de las nuevas FAQs al mismo tiempo
+        // 3. Aparece espacio nuevas FAQs
         tl.to(extraFaqs, {
             height: extraFaqsHeight,
             marginTop: "var(--sp-s)",
@@ -96,7 +101,7 @@ function initFaqsMore() {
             ease: "power2.inOut"
         }, "<");
 
-        // 6. Entran las nuevas FAQs
+        // 4. Entran nuevas FAQs
         tl.to(extraFaqItems, {
             autoAlpha: 1,
             y: 0,
@@ -111,6 +116,9 @@ function initFaqsMore() {
     });
 }
 
+// ░░░░░░░░ FAQS — ACCORDION
+// Gestiona apertura y cierre de cada pregunta
+// 1 FAQ abierta al mismo tiempo
 function initFaqsAccordion() {
     const faqItems = document.querySelectorAll(".dropdown_faqs details");
 
@@ -126,6 +134,8 @@ function initFaqsAccordion() {
         item.open = true;
         item.dataset.open = "false";
 
+        // --> GSAP.SET
+        // Respuestas cerradas
         gsap.set(answer, {
             height: 0,
             autoAlpha: 1,
@@ -146,6 +156,7 @@ function initFaqsAccordion() {
 
             const isOpen = item.dataset.open === "true";
 
+            // Cierra otra FAQ abierta
             faqItems.forEach((otherItem) => {
                 if (otherItem === item) return;
                 if (otherItem.dataset.open !== "true") return;
@@ -178,6 +189,7 @@ function initFaqsAccordion() {
                 }
             });
 
+            // Si FAQ actual estaba abierta, la cerramos
             if (isOpen) {
                 item.dataset.open = "false";
 
@@ -200,7 +212,6 @@ function initFaqsAccordion() {
                         ease: "power3.inOut"
                     });
                 }
-
                 return;
             }
 
@@ -210,6 +221,7 @@ function initFaqsAccordion() {
 
             const answerHeight = answer.scrollHeight;
 
+            // Abrir FAQ seleccionada 
             gsap.to(answer, {
                 height: answerHeight,
                 autoAlpha: 1,
@@ -231,12 +243,8 @@ function initFaqsAccordion() {
     });
 }
 
-
-
-
-
-// SHUFFLE ARRAY
-
+// ░░░░░░░░ SHUFFLE ARRAY
+// Piezas SVG pixelado (paso 03. narrativa) aparezcan aleatorias
 function shuffleArray(array) {
     const arr = [...array];
 
@@ -249,19 +257,12 @@ function shuffleArray(array) {
     return arr;
 }
 
-
-
-// GSAP
-
+// ░░░░░░░░ GSAP — PLUGINS
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-// ScrollTrigger.normalizeScroll(true);
-
-
-
-
-// HERO — LOAD INICIAL 30' MIN ESPERA
-
+// ░░░░░░░░ LOAD INICIAL — MENSAJE
+// Lógica para mostrar load según intervalo definido
+// Ojo: valor actual en código = 0.1 min
 function shouldShowFullIntro() {
     const introLastSeen = localStorage.getItem("cnomIntroLastSeen");
     const now = Date.now();
@@ -272,11 +273,15 @@ function shouldShowFullIntro() {
     return now - Number(introLastSeen) > thirtyMinutes;
 }
 
+// Guardar momento en que usuario ha visto intro
 function saveIntroSeenTime() {
     localStorage.setItem("cnomIntroLastSeen", Date.now());
 }
 
-// RESIZE — RECÁLCULO SEGURO
+// ░░░░░░░░ RESIZE 
+// Refresh ScrollTrigger x cambio ancho de ventana
+// Evitar refresh móvil x cambio de altura
+// Al aparecer / desaparecer barra del navegador
 
 function initResizeRefresh() {
     let resizeTimer;
@@ -298,7 +303,9 @@ function initResizeRefresh() {
     });
 }
 
-// HERO — LOAD INICIAL
+// ░░░░░░░░ HERO 1 — INTRO INICIAL
+// 1. Mensajes iniciales (load)
+// 2. Revelar + animación Hero
 
 function initHeroIntroMessages() {
     const introMessages = document.querySelector(".hero-intro-messages");
@@ -322,6 +329,7 @@ function initHeroIntroMessages() {
     const showFullIntro = shouldShowFullIntro();
     const shouldAnimateHeader = !isSwupNavigation;
 
+    /// --> SPLIT TEXT
     const heroH1Split = new SplitText(heroH1, {
         type: "words,chars",
         wordsClass: "word",
@@ -353,7 +361,8 @@ function initHeroIntroMessages() {
         linesClass: "intro-source-line"
     });
 
-    // Estado inicial general
+
+    /// --> GSAP.SET
     gsap.set(introMessages, {
         autoAlpha: 1
     });
@@ -363,21 +372,18 @@ function initHeroIntroMessages() {
         filter: "none"
     });
 
-    // Mensaje 1 entra animado desde el inicio
     gsap.set(introMessage01Split.lines, {
         autoAlpha: 0,
         y: 18,
         filter: "blur(10px)"
     });
 
-    // Mensaje 2 queda preparado, pero oculto
     gsap.set(introMessage02Words, {
         autoAlpha: 0,
         y: 18,
         filter: "blur(10px)"
     });
 
-    // Fuente también entra animada
     gsap.set(introSourceSplit.lines, {
         autoAlpha: 0,
         y: 10,
@@ -390,7 +396,6 @@ function initHeroIntroMessages() {
         filter: "blur(6px)"
     });
 
-    // Ocultamos hero real al inicio
     gsap.set(heroStateOne, {
         autoAlpha: 1,
         visibility: "visible"
@@ -438,12 +443,14 @@ function initHeroIntroMessages() {
 
     introProgress.textContent = "0%";
 
+    /// --> TIMELINE HERO V1 (LARGA)
+    // Secuencia intro completa
     const tl = gsap.timeline();
 
     if (showFullIntro) {
         saveIntroSeenTime();
 
-        // Pausa inicial antes de que aparezca el primer texto
+        // Pausa inicial antes 1º mensaje
         tl.to({}, {
             duration: 0.4
         });
@@ -474,7 +481,7 @@ function initHeroIntroMessages() {
             }
         }, "<+=0.35");
 
-        // Entra porcentaje visualmente
+        // Entra porcentaje 
         tl.to(introProgress, {
             autoAlpha: 1,
             y: 0,
@@ -534,12 +541,7 @@ function initHeroIntroMessages() {
             }
         }, "<");
 
-        // Pausa mensaje 2
-        // tl.to({}, {
-        //     duration: 2.8
-        // }, "<");
-
-        // Primero desaparece la parte social / silenciada
+        // Desaparece 1º parte mensaje 2
         tl.to(introMessage02SecondarySplit.words, {
             autoAlpha: 0,
             y: 18,
@@ -552,10 +554,6 @@ function initHeroIntroMessages() {
             }
         }, "<+=7");
 
-        // tl.to({}, {
-        //     duration: 1
-        // },);
-
         // Sale fuente y porcentaje
         tl.to([introSourceSplit.lines, introProgress], {
             autoAlpha: 0,
@@ -566,7 +564,7 @@ function initHeroIntroMessages() {
             stagger: 0.04
         }, "<+=2.5");
 
-        // Después desaparece la idea principal
+        // Desaparece 2º parte mensaje 2
         tl.to(introMessage02MainSplit.words, {
             autoAlpha: 0,
             y: 18,
@@ -581,6 +579,8 @@ function initHeroIntroMessages() {
     }
 
     else {
+        // Si intro vista recientemente
+        // Carga directa Hero sin mensajes
         tl.set([
             introMessage01Split.lines,
             introMessage02Words,
@@ -590,17 +590,20 @@ function initHeroIntroMessages() {
             autoAlpha: 0
         });
 
+        // Pausa
         tl.to({}, {
             duration: 0.35
         });
     }
 
+    /// --> SET
+    // Ocultar capa intro
     tl.set(introMessages, {
         autoAlpha: 0,
         pointerEvents: "none"
     });
 
-    // Dejamos todo preparado antes de quitar la clase del body
+
     tl.set(heroH1, {
         autoAlpha: 1,
         filter: "none"
@@ -632,12 +635,14 @@ function initHeroIntroMessages() {
         autoAlpha: 0
     });
 
-    // Quitamos la clase para que el CSS deje de bloquear el hero/header
+    // Quitamos clase para que el CSS deje de bloquear el hero/header
     tl.call(() => {
         document.body.classList.remove("is-intro-active");
     });
 
-    // 1. Aparece H1 por caracteres, como la salida pero al revés
+    /// --> TIMELINE HERO V2 (CORTA)
+
+    // 1. Aparece H1 por caracteres
     tl.to(heroH1Split.chars, {
         autoAlpha: 1,
         y: 0,
@@ -650,7 +655,7 @@ function initHeroIntroMessages() {
         }
     });
 
-    // 2. Aparece menú
+    // 2. Aparece menú si la carga no viene interna por SWUP
     if (shouldAnimateHeader) {
         tl.to([headerLogo, headerCenter, headerRight], {
             autoAlpha: 1,
@@ -684,14 +689,14 @@ function initHeroIntroMessages() {
         ease: "sine.out"
     }, "<+=0.45");
 
+    // 5. Desbloquea scroll cuando intro ha terminado
     tl.call(() => {
         document.body.classList.remove("is-scroll-locked");
     });
 }
 
-
-// HERO - ANIMACIÓN PRINCIPAL
-
+// ░░░░░░░░ HERO 2 — PRINCIPAL
+// Estado 1 → Estado 2
 function initHeroAnimation() {
     const hero = document.querySelector(".hero");
 
@@ -701,6 +706,7 @@ function initHeroAnimation() {
 
     if (!heroH2Element) return;
 
+    /// --> SPLIT TEXT
     const heroH2 = new SplitText(heroH2Element, {
         type: "lines",
         linesClass: "line"
@@ -713,6 +719,8 @@ function initHeroAnimation() {
 
     if (!heroTxt || !heroIntro) return;
 
+    /// --> MATCH MEDIA
+    // Animación común con ajustes específicos Desk / Tab / Mob
     const mm = gsap.matchMedia();
 
     mm.add({
@@ -725,13 +733,12 @@ function initHeroAnimation() {
         const heroPctMain = document.querySelector(".hero-pct");
         const heroBrownGradient = document.querySelector(".hero-brown-transition__gradient");
 
-        // const heroPurpleGradient = document.querySelector(".hero-purple-transition__color");
         const heroBrownSolid = document.querySelector(".hero-brown-transition__solid");
 
         let girlYToCenter = "-18vh";
         let desktopGradientScale = 3;
 
-        // SET
+        /// --> SET
         gsap.set(heroH1Chars, {
             willChange: "transform, opacity, filter"
         });
@@ -759,17 +766,11 @@ function initHeroAnimation() {
             filter: "blur(7px)"
         });
 
-        // gsap.set(heroPurpleGradient, {
-        //     autoAlpha: 1,
-        //     yPercent: 100,
-        // });
-
         gsap.set(heroBrownSolid, {
             autoAlpha: 1,
             yPercent: 100,
         });
 
-        // Estado inicial del degradado brown de salida del hero.
         if (heroBrownGradient) {
             gsap.set(heroBrownGradient, {
                 yPercent: 100,
@@ -780,6 +781,8 @@ function initHeroAnimation() {
             });
         }
 
+        /// --> CÁLCULOS RESPONSIVE
+        // Cálculo dinámico en escritorio: imagen principal al centro
         if (isDesktop && heroPctMain) {
             const heroPctRect = heroPctMain.getBoundingClientRect();
 
@@ -803,15 +806,16 @@ function initHeroAnimation() {
             );
         }
 
+        /// --> TIMELINE HERO 2
+        // ScrollTrigger controla transición Hero 1 → Hero 2
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".hero",
                 start: "top top",
                 end: "bottom bottom",
                 scrub: 1.2,
-                // markers: true,
 
-                // snap: false,
+                // Snap solo escritorio entre puntos de descanso del hero
                 snap: isDesktop ? {
                     snapTo: (progress, self) => {
                         const duration = tl.duration();
@@ -863,6 +867,7 @@ function initHeroAnimation() {
                     ease: "sine.inOut"
                 } : false,
 
+                // Al avanzar suficiente, empuja scroll hacia inicio narrativa
                 onUpdate: isDesktop ? (self) => {
 
                     if (self.progress >= 0.75 && self.direction === 1 && !self._hasSnapped) {
@@ -895,6 +900,7 @@ function initHeroAnimation() {
 
         tl.addLabel("heroRest01");
 
+        // 1. Sale H1 inicial
         tl.to(heroH1Chars, {
             autoAlpha: 0,
             filter: "blur(12px)",
@@ -907,6 +913,7 @@ function initHeroAnimation() {
             }
         });
 
+        // 2. Reposiciona imagen principal
         tl.to(".hero-pct", {
             scale: isDesktop ? 0.65 : 1,
             y: isDesktop ? girlYToCenter : 0,
@@ -914,7 +921,7 @@ function initHeroAnimation() {
             ease: "sine.inOut"
         }, "<-=0.1");
 
-        // Control de degradado inferior del hero
+        // 3. Escala degradado inferior del hero
         tl.fromTo(".hero-gradient__strong",
             {
                 scaleY: isDesktop ? 0.25 : 0.35,
@@ -928,18 +935,21 @@ function initHeroAnimation() {
             },
             "<"
         );
+        // 4. Sale texto inferior del primer estado
         tl.to(heroIntro, {
             autoAlpha: 0,
             filter: "blur(7px)",
             duration: 3
         }, "<");
 
+        // 5. Activa segundo estado del hero
         tl.to(".hero-state--two", {
             autoAlpha: 1,
             visibility: "visible",
             duration: 0.1
         }, "<=");
 
+        // 6. Entra H2 por líneas
         tl.to(heroH2.lines, {
             autoAlpha: 1,
             y: 0,
@@ -953,6 +963,7 @@ function initHeroAnimation() {
         }, isDesktop ? "<+=0.9" : "<+=2");
 
 
+        // 7. Entran textos del segundo estado
         tl.to(heroTxtParagraphs, {
             autoAlpha: 1,
             y: 0,
@@ -968,6 +979,7 @@ function initHeroAnimation() {
 
         let heroButtonDelayCall = null;
 
+        // 8. Entra botón explorar
         tl.to(isDesktop ? ".btn-hero--desktop" : ".btn-hero--mobile", {
             autoAlpha: 1,
             duration: 0.9
@@ -979,12 +991,14 @@ function initHeroAnimation() {
             duration: 2
         });
 
+        // 9. Entra transición marrón sólida
         tl.to(heroBrownSolid, {
             yPercent: 0,
             duration: 2,
         }, "<=0.3");
 
         if (heroBrownGradient) {
+            // 10. Entra transición marrón degradada
             tl.to(heroBrownGradient, {
                 yPercent: isDesktop ? 0 : 49,
                 duration: isDesktop ? 3 : 3,
@@ -992,17 +1006,11 @@ function initHeroAnimation() {
                 filter: isDesktop ? "blur(20px)" : "blur(10px)",
             }, "<=0.3");
         }
-
-        // if (!isDesktop) {
-        //     tl.to({}, {
-        //         duration: 2
-        //     });
-        // }
     });
 }
 
-
-// Botón hero → scroll suave a narrativa
+// ░░░░░░░░ HERO CTA — SCROLL A NARRATIVA
+// Click botón explorar → scroll suave a narrativa
 function initHeroCtaScroll() {
     const heroButtons = document.querySelectorAll(".btn-hero");
 
@@ -1036,7 +1044,9 @@ function initHeroCtaScroll() {
         });
     });
 }
-// HEADER — THEME
+
+// ░░░░░░░░ HEADER — THEME
+// ░░ Gestiona cambio de color header / logo según sección
 function setHeaderTheme(theme = "grey") {
     const allowedThemes = ["grey", "brown"];
     const safeTheme = allowedThemes.includes(theme) ? theme : "grey";
@@ -1049,6 +1059,7 @@ function setHeaderTheme(theme = "grey") {
     updateHeaderLogoTheme(safeTheme);
 }
 
+// ░░ Actualiza src de logos según theme activo
 function updateHeaderLogoTheme(theme) {
     const logoImages = document.querySelectorAll(".logo-img");
 
@@ -1064,6 +1075,7 @@ function updateHeaderLogoTheme(theme) {
     });
 }
 
+// ░░ Define theme inicial según página actual
 function setInitialHeaderThemeForPage() {
     const page = document.body.dataset.page;
 
@@ -1075,7 +1087,7 @@ function setInitialHeaderThemeForPage() {
     setHeaderTheme("grey");
 }
 
-
+// ░░ En home, click logo recarga para reiniciar experiencia
 function initHomeLogoReload() {
     const logoLink = document.querySelector("a.logo");
 
@@ -1096,7 +1108,8 @@ function initHomeLogoReload() {
     }, true);
 }
 
-// HEADER — THEME SECTIONS
+// ░░░░░░░░ HEADER — THEME SECTIONS
+// Cambia theme header al entrar / salir de secciones con data-header-theme
 function initHeaderThemeSections() {
     const themeSections = document.querySelectorAll("[data-header-theme]");
 
@@ -1119,14 +1132,14 @@ function initHeaderThemeSections() {
     });
 }
 
-// NARRATIVA - SECUENCIA COMPLETA
-
+// ░░░░░░░░ NARRATIVA — SECUENCIA COMPLETA
+// Control 6 pasos narrativa
 function initNarrativeSequence() {
     const sequence = document.querySelector(".narrative-sequence--all");
 
     if (!sequence) return;
 
-    // Layers
+    /// --> SELECTORES LAYERS
     const nacerLayer = sequence.querySelector(".narrative-layer--01");
     const guionLayer = sequence.querySelector(".narrative-layer--02");
     const layer03 = sequence.querySelector(".narrative-layer--03");
@@ -1135,7 +1148,7 @@ function initNarrativeSequence() {
     const layer06 = sequence.querySelector(".narrative-layer--06");
 
 
-    // Indicadores narrativa
+    /// --> INDICADOR NARRATIVA
     const indicator = document.querySelector(".indicator");
     const indicatorCurrent = document.querySelector(".indicator__current");
     const indicatorTitle = document.querySelector(".indicator__title");
@@ -1147,6 +1160,7 @@ function initNarrativeSequence() {
 
     const indicatorBrownSteps = [1, 4, 5];
 
+    // ░ Mostrar indicador al entrar en narrativa
     function showNarrativeIndicator() {
         if (!indicator) return;
 
@@ -1158,6 +1172,7 @@ function initNarrativeSequence() {
         });
     }
 
+    // ░ Ocultar indicador al salir de narrativa
     function hideNarrativeIndicator() {
         if (!indicator) return;
 
@@ -1169,6 +1184,7 @@ function initNarrativeSequence() {
         });
     }
 
+    // ░ Actualizar número / título del indicador según paso activo
     function updateNarrativeIndicator(index, animate = true) {
         if (!indicatorCurrent || !indicatorTitle || !indicatorTotal) return;
         if (!narrativeSteps[index]) return;
@@ -1205,10 +1221,10 @@ function initNarrativeSequence() {
 
         gsap.killTweensOf(changingItems);
 
-
-
+        /// --> TIMELINE INDICADOR
         const tl = gsap.timeline();
 
+        // 1. Sale dato actual
         tl.to(changingItems, {
             autoAlpha: 0,
             y: -10,
@@ -1221,6 +1237,7 @@ function initNarrativeSequence() {
             }
         });
 
+        // 2. Cambia contenido del indicador
         tl.call(() => {
             updateNarrativeIndicatorColor(index);
 
@@ -1233,6 +1250,7 @@ function initNarrativeSequence() {
             });
         });
 
+        // 3. Entra nuevo dato
         tl.to(changingItems, {
             autoAlpha: 1,
             y: 0,
@@ -1246,7 +1264,7 @@ function initNarrativeSequence() {
         });
     }
 
-    //función indicador color narrativa
+    // ░ Cambia color indicador según paso narrativo
     function updateNarrativeIndicatorColor(index) {
         if (!indicator) return;
 
@@ -1256,6 +1274,7 @@ function initNarrativeSequence() {
     }
 
 
+    // ░ Sincroniza indicador con labels de la timeline
     function syncNarrativeIndicator(timeline) {
         if (!timeline) return;
 
@@ -1281,7 +1300,7 @@ function initNarrativeSequence() {
         updateNarrativeIndicator(currentIndex);
     }
 
-    // Snap Points
+    /// ░ --> SNAP POINTS
     function getSnapPointsFromLabels(timeline, labels) {
         if (!timeline || !labels.length) return [];
 
@@ -1295,7 +1314,8 @@ function initNarrativeSequence() {
     }
 
 
-    //flores salen de la pantalla
+    /// ░ --> CÁLCULOS SALIDA FLORES
+    // Cálculo responsive para sacar flores pantalla (paso 03-04)
     function getXToExitRight(element, margin = 80) {
         if (!element) return 0;
 
@@ -1319,7 +1339,7 @@ function initNarrativeSequence() {
     }
 
 
-    // Estado inicial del indicador
+    /// --> SET INICIAL INDICADOR
     if (indicator) {
         gsap.set(indicator, {
             autoAlpha: 0
@@ -1374,7 +1394,7 @@ function initNarrativeSequence() {
     const pasoContent = sequence.querySelector(".narrative-layer--06 .step--06__content");
     const pasoBtn = sequence.querySelector(".narrative-layer--06 .btn");
 
-    // Step 05 & 06 Luces
+    // Luces Step 05 / 06
     const allFlowersLights = gsap.utils.toArray(".step--05_luz, .step--06-luz");
 
     const flowerLightPairs = [
@@ -1401,12 +1421,10 @@ function initNarrativeSequence() {
         },
     ]
 
-
     const flowerLightsLoop = gsap.timeline({
         paused: true,
         repeat: -1
     });
-
 
     flowerLightPairs.forEach((pair) => {
         const currentLights = [pair.triggerLight, pair.centralLight];
@@ -1420,9 +1438,7 @@ function initNarrativeSequence() {
             filter: "blur(1px)"
         });
 
-        // 2. Pequeña pausa antes de activar la luz central
-
-        // 3. Aparece la luz central
+        // 2. Aparece la luz central (flor step 5)
         flowerLightsLoop.to(pair.centralLight, {
             autoAlpha: 1,
             scale: 1.25,
@@ -1431,12 +1447,12 @@ function initNarrativeSequence() {
             filter: "blur(1px)"
         }, "<+=0.6");
 
-        // 4. Ambas se quedan encendidas un momento
+        // 3. Ambas se quedan encendidas un momento
         flowerLightsLoop.to({}, {
             duration: 0.8
         });
 
-        // 5. Se apaga la pareja completa
+        // 4. Se apaga la pareja completa
         flowerLightsLoop.to(currentLights, {
             autoAlpha: 0,
             scale: 0.75,
@@ -1445,13 +1461,9 @@ function initNarrativeSequence() {
             filter: "blur(0px)"
         });
 
-        // 6. Pausa antes de la siguiente pareja
-        // flowerLightsLoop.to({}, {
-        //     duration: 0.8
-        // });
     });
 
-    // Cierre del loop: apagamos la última pareja antes de volver a empezar
+    // Cierre loop: apagar última pareja antes de reiniciar
     const lastPair = flowerLightPairs[flowerLightPairs.length - 1];
     const lastLights = [lastPair.triggerLight, lastPair.centralLight];
 
@@ -1466,9 +1478,7 @@ function initNarrativeSequence() {
         duration: 0.35
     });
 
-
-
-    // Snap to
+    // Labels para snap narrativo escritorio
     const narrativeSnapLabels = [
         "rest01",
         "rest02",
@@ -1480,12 +1490,12 @@ function initNarrativeSequence() {
         "rest08",
         "rest09",
         "rest10",
-
     ];
 
     if (!nacerLayer || !guionLayer || !nacerGraphics.length || !nacerTxt || !guionGraphics || !guionContent) return;
 
-
+    /// ░ --> GSAP.SET NARRATIVA
+    // Estado inicial común antes de crear timeline desktop / mobile
     function setInitialNarrativeState(isDesktop) {
         // Indicador
         if (indicator) {
@@ -1559,12 +1569,7 @@ function initNarrativeSequence() {
             filter: "blur(25px)"
         });
 
-        // Step 04
-        // gsap.set(juicioPurpleSphere, {
-        //     autoAlpha: 0,
-        //     scale: 0,
-        //     filter: "blur(0px)"
-        // });
+
 
         gsap.set(juicioBrownSphere, {
             autoAlpha: 0,
@@ -1572,10 +1577,7 @@ function initNarrativeSequence() {
             filter: "blur(0px)"
         });
 
-        // gsap.set(juicioContent, {
-        //     autoAlpha: 0,
-        //     filter: "blur(20px)"
-        // });
+
 
         // Step 05
         gsap.set([nombreGradientBtm, nombreGradientBg], {
@@ -1591,9 +1593,7 @@ function initNarrativeSequence() {
             yPercent: 60
         });
 
-        // gsap.set([nombreFlorHblur, nombreFlorMblur, nombreFlorLblur], {
-        //     autoAlpha: 0
-        // });
+
 
         // Step 06
         gsap.set([pasoFlor1, pasoFlor2, pasoFlor3, pasoFlor4, pasoFlor5], {
@@ -1622,6 +1622,8 @@ function initNarrativeSequence() {
         });
     }
 
+    /// ░ --> TIMELINE NARRATIVA — DESKTOP
+    // Secuencia con scrub + snap por puntos de descanso
     function initNarrativeDesktop() {
 
         const tl = gsap.timeline({
@@ -1630,9 +1632,9 @@ function initNarrativeSequence() {
                 start: "top top",
                 end: "bottom bottom",
                 scrub: 1.2,
-                //markers: true,
                 invalidateOnRefresh: true,
 
+                // Snap escritorio a labels rest01...rest10
                 snap: {
                     snapTo: (progress, self) => {
                         const duration = tl.duration();
@@ -1702,36 +1704,29 @@ function initNarrativeSequence() {
             }
         });
 
+        // ░ Ajusta color header según dirección del scroll
         function setHeaderThemeByDirection(forwardTheme, backwardTheme) {
             const direction = tl.scrollTrigger ? tl.scrollTrigger.direction : 1;
 
             setHeaderTheme(direction === -1 ? backwardTheme : forwardTheme);
         }
 
-        // STEP 1 — ANIMACIÓN
+        // -> STEP 1 — NACER
         tl.addLabel("chapter01");
         tl.call(() => setHeaderThemeByDirection("grey", "grey"), null, "chapter01");
 
-        // tl.to(nacerGraphics, {
-        //     scale: 10,
-        //     duration: 2
-        // });
-
+        // 1. Entra texto Step 1
         tl.to(nacerTxt, {
             autoAlpha: 1,
             filter: "blur(0px)",
             duration: 2
         }, "<+=0.3");
 
-        // tl.to(nacerBgWhite, {
-        //     autoAlpha: 1,
-        //     duration: 0.1
-        // }, "<=");
-
         tl.to({}, {
             duration: 1.5
         });
 
+        // 2. Aparece esfera blanca
         tl.to(nacerBgWhite, {
             autoAlpha: 1,
             duration: 0.15,
@@ -1740,23 +1735,25 @@ function initNarrativeSequence() {
 
         tl.addLabel("rest01");
 
+        // 3. Esfera blanca invade pantalla
         tl.to(nacerBgWhite, {
             scale: 30,
             duration: 6,
             ease: "sine.out"
         });
 
+        // 4. Sale texto Step 1
         tl.to(nacerTxt, {
             autoAlpha: 0,
             filter: "blur(20px)",
             duration: 1
         }, "<+=0.1");
 
-        // STEP 2 — ANIMACIÓN
-
+        // -> STEP 2 — GUIÓN
         tl.addLabel("chapter02", "<+=3.2");
         tl.call(() => setHeaderThemeByDirection("brown", "grey"), null, "chapter02");
 
+        // 1. Activa capa Step 2
         tl.to(guionLayer, {
             autoAlpha: 1,
             duration: 2,
@@ -1765,6 +1762,7 @@ function initNarrativeSequence() {
         // }, "chapter02");
 
 
+        // 2. Sube gráfico Step 2
         tl.to(guionGraphics, {
             y: "25vh",
             duration: 6,
@@ -1772,30 +1770,21 @@ function initNarrativeSequence() {
 
         tl.addLabel("rest02");
 
+        // 3. Entra texto Step 2
         tl.to(guionContent, {
             autoAlpha: 1,
             duration: 4,
             filter: "blur(0px)"
         }, "<+=0.1");
 
-
-        // tl.addLabel("rest01");
-        // tl.addLabel("rest02");
-
-        // tl.to({}, {
-        //     duration: 1
-        // });
-
+        // 4. Gráfico ocupa posición final
         tl.to(guionGraphics, {
             y: 0,
             duration: 6,
             scale: 1
         });
 
-        // tl.to({}, {
-        //     duration: 2
-        // });
-
+        // 5. Aparece SVG pixelado por piezas
         tl.to(shuffledPixelParts, {
             autoAlpha: 1,
             duration: 0.01,
@@ -1804,13 +1793,14 @@ function initNarrativeSequence() {
         });
 
         tl.addLabel("rest03");
-        //tl.addLabel("rest03");
+
 
         tl.to({}, {
             duration: 2
         });
 
 
+        // 6. Desplaza flor pixel inicial
         tl.to(pixelSvg, {
             x: 300,
             duration: 5,
@@ -1818,6 +1808,7 @@ function initNarrativeSequence() {
         });
 
 
+        // 7. Desplaza flor desenfocada inicial
         tl.to(guionImage, {
             x: -470,
             duration: 5,
@@ -1832,23 +1823,26 @@ function initNarrativeSequence() {
         }, "<=");
 
 
-        // STEP 3 — ANIMACIÓN
+        // -> STEP 3 — APAGA
         tl.addLabel("chapter03", "<");
         tl.call(() => setHeaderThemeByDirection("grey", "brown"), null, "chapter03");
 
 
+        // 1. Entra transición de fondo
         tl.to(guionBgTransition, {
             autoAlpha: 1,
             duration: 1.5,
             ease: "sine.out"
         }, "<");
 
+        // 2. Activa capa Step 3
         tl.to(layer03, {
             autoAlpha: 1,
             duration: 1,
             ease: "sine.out"
         }, "<");
 
+        // 3. Sale texto Step 2
         tl.to(guionContent, {
             autoAlpha: 0,
             duration: 1,
@@ -1866,8 +1860,6 @@ function initNarrativeSequence() {
             }
         }, "<+=0.1");
 
-        // tl.addLabel("rest04");
-
         tl.to({}, {
             duration: 1.5
         });
@@ -1876,7 +1868,6 @@ function initNarrativeSequence() {
         // Flor pixel sale de pantalla derecha
         tl.to(pixelSvg, {
             x: () => getXToExitRight(pixelSvg),
-            // x: 760,
             duration: 5.5,
             ease: "power1.in",
         });
@@ -1884,13 +1875,12 @@ function initNarrativeSequence() {
         // Flor desenfocada sale de pantalla izquierda
         tl.to(guionImage, {
             x: () => getXToExitLeft(guionImage),
-            // x: -920,
             duration: 5.5,
             ease: "power1.in",
         }, "<=");
 
 
-        // STEP 4 — ANIMACIÓN
+        // -> STEP 4 — JUICIO
 
         // Desaparece texto step 3
         tl.to(apagaContent, {
@@ -1911,8 +1901,6 @@ function initNarrativeSequence() {
 
         tl.addLabel("rest05");
 
-        //tl.addLabel("rest05");
-
         // Pausa
         tl.to({}, {
             duration: 2
@@ -1928,8 +1916,7 @@ function initNarrativeSequence() {
         });
 
         tl.addLabel("rest06");
-        //tl.addLabel("rest06");
-        // Pausa
+
         tl.to({}, {
             duration: 2
         });
@@ -1951,7 +1938,7 @@ function initNarrativeSequence() {
         }, "<+=0.1");
 
 
-        // STEP 5 — ANIMACIÓN
+        // -> STEP 5 — NOMBRE
         tl.addLabel("chapter05");
         tl.call(() => setHeaderTheme("grey"), null, "chapter05");
 
@@ -1984,8 +1971,6 @@ function initNarrativeSequence() {
             filter: "blur(0px)"
         }, "<-=0.2");
 
-        // tl.addLabel("rest03");
-        // tl.addLabel("rest07");
         // Pausa
         tl.to({}, {
             duration: 2
@@ -2003,7 +1988,6 @@ function initNarrativeSequence() {
             ease: "power4.in",
         }, "<=");
 
-        //tl.addLabel("rest08");
         // Pausa
 
         tl.to(nombreContent, {
@@ -2013,7 +1997,7 @@ function initNarrativeSequence() {
         }, "<+=4");
 
 
-        // STEP 6 — ANIMACIÓN
+        // -> STEP 6 — PASO
         tl.addLabel("chapter06");
         tl.call(() => setHeaderTheme("grey"), null, "chapter06");
 
@@ -2079,7 +2063,7 @@ function initNarrativeSequence() {
         let hasStartedFlowerLightsLoop = false;
         let flowerLightsFadeOutTween = null;
 
-        //Reiniciar luces flores
+        // ░ Reiniciar / apagar loop luces flores
         function stopFlowerLightsLoop() {
             if (!hasStartedFlowerLightsLoop) return;
 
@@ -2129,10 +2113,6 @@ function initNarrativeSequence() {
             flowerLightsLoop.restart();
         }, null, "flowerLights");
 
-        // tl.to({}, {
-        //     duration: 2
-        // });
-
         tl.eventCallback("onUpdate", () => {
             syncNarrativeIndicator(tl);
 
@@ -2178,6 +2158,8 @@ function initNarrativeSequence() {
 
     }
 
+    /// ░ --> TIMELINE NARRATIVA — MOBILE
+    // Secuencia lineal sin snap para evitar conflictos táctiles
     function initNarrativeMobile() {
         let hasStartedFlowerLightsLoop = false;
         let flowerLightsFadeOutTween = null;
@@ -2190,7 +2172,7 @@ function initNarrativeSequence() {
                 scrub: 1.2,
                 invalidateOnRefresh: true,
 
-                // Sin snapTo en mobile/tablet
+                // Sin snapTo en mobile / tablet
                 snap: false,
 
                 onEnter: () => {
@@ -2246,7 +2228,7 @@ function initNarrativeSequence() {
             });
         }
 
-        // STEP 1
+        // STEP 1 — NACER
         tl.addLabel("chapter01");
         tl.call(() => setHeaderTheme("grey"), null, "chapter01");
 
@@ -2261,7 +2243,7 @@ function initNarrativeSequence() {
             duration: 2
         });
 
-        // STEP 2
+        // STEP 2 — GUIÓN
         tl.addLabel("chapter02");
         tl.call(() => setHeaderTheme("brown"), null, "chapter02");
 
@@ -2308,7 +2290,7 @@ function initNarrativeSequence() {
             duration: 2.5
         });
 
-        // STEP 3
+        // STEP 3 — APAGA
         tl.addLabel("chapter03");
         tl.call(() => setHeaderTheme("grey"), null, "chapter03");
 
@@ -2353,7 +2335,7 @@ function initNarrativeSequence() {
             duration: 2.5
         });
 
-        // STEP 4
+        // STEP 4 — JUICIO
         tl.addLabel("chapter04");
         tl.call(() => setHeaderTheme("grey"), null, "chapter04");
 
@@ -2389,7 +2371,7 @@ function initNarrativeSequence() {
             duration: 2.5
         });
 
-        // STEP 5
+        // STEP 5 — NOMBRE
         tl.addLabel("chapter05");
         tl.call(() => setHeaderTheme("grey"), null, "chapter05");
 
@@ -2430,11 +2412,7 @@ function initNarrativeSequence() {
             duration: 2.5
         });
 
-        // STEP 6
-        // STEP 6
-        // El fondo cambia. Las flores borrosas hacen blur-out.
-        // Aparecen las flores activas + la central + las luces.
-
+        // STEP 6 — PASO
         tl.to(nombreGradientBg, {
             scaleY: 3,
             duration: 5,
@@ -2599,7 +2577,8 @@ function initNarrativeSequence() {
         });
     }
 
-    /////////aqui
+    /// --> MATCH MEDIA NARRATIVA
+    // Lanza timeline desktop o mobile según ancho viewport
     const mm = gsap.matchMedia();
 
     mm.add({
@@ -2618,8 +2597,8 @@ function initNarrativeSequence() {
     });
 }
 
-
-// sección tool
+// ░░░░░░░░ TOOL — ANIMACIÓN
+// Entrada de sección herramienta en home y página herramienta
 
 async function initToolAnimation() {
     const toolSection = document.querySelector(".tool");
@@ -2639,15 +2618,15 @@ async function initToolAnimation() {
 
     const isToolPage = document.body.dataset.page === "herramienta";
 
-    // Espera a que las fuentes estén listas antes de partir líneas
+    // Esperar fuentes antes de animar líneas
     if (document.fonts && document.fonts.ready) {
         await document.fonts.ready;
     }
 
+    /// --> GSAP.SET
     gsap.set([titleTool, txtTool, btnTool], {
         autoAlpha: 1
     });
-
 
     gsap.set(titleToolLines, {
         autoAlpha: 0,
@@ -2677,8 +2656,7 @@ async function initToolAnimation() {
         y: 14,
     });
 
-
-    //snap to tool escritorio
+    /// --> SNAP TOOL ESCRITORIO
     function getToolSnapPoints(timeline, labels) {
         if (!timeline || !labels.length) return [];
 
@@ -2692,12 +2670,13 @@ async function initToolAnimation() {
     }
 
     const isMobile = ScrollTrigger.isTouch || window.matchMedia("(max-width: 1279px)").matches;
-
     const toolSnapLabels = [
         "toolContent",
         "toolEnd"
     ];
 
+    /// --> TIMELINE TOOL
+    // En página herramienta / móvil se ejecuta directa; en home va con ScrollTrigger
     const tlTool = gsap.timeline(
         isToolPage || isMobile
             ? {}
@@ -2707,12 +2686,12 @@ async function initToolAnimation() {
                     start: "top 70%",
                     end: "bottom bottom",
                     scrub: 1.2,
-                    // markers: true,
                     invalidateOnRefresh: true
                 }
             }
     );
 
+    // 1. Entra título
     tlTool.to(titleToolLines, {
         autoAlpha: 1,
         y: 0,
@@ -2725,6 +2704,7 @@ async function initToolAnimation() {
         }
     });
 
+    // 2. Entra texto
     tlTool.to(txtTool, {
         autoAlpha: 1,
         y: 0,
@@ -2737,6 +2717,7 @@ async function initToolAnimation() {
         }
     }, "<+=0.6");
 
+    // 3. Entra texto inferior
     tlTool.to(txtInfInfTool, {
         autoAlpha: 1,
         y: 0,
@@ -2748,6 +2729,7 @@ async function initToolAnimation() {
         }
     }, "<+=0.4");
 
+    // 4. Entra botón
     tlTool.to(btnTool, {
         autoAlpha: 1,
         duration: 0.9
@@ -2755,13 +2737,13 @@ async function initToolAnimation() {
 
     tlTool.addLabel("toolContent");
 
-
-    // Solo en home
+    // *Solo en home: transición hacia siguiente sección
     if (!isToolPage && gradientTool) {
         tlTool.to({}, {
             duration: 2
         });
 
+        // 5. Entra transición blanca hacia siguiente sección
         tlTool.to(gradientTool, {
             scaleY: 1.5,
             duration: 3
@@ -2775,9 +2757,8 @@ async function initToolAnimation() {
     }
 }
 
-
-// BUSCO AYUDA ANIMATION
-
+// ░░░░░░░░ BUSCO AYUDA — ANIMACIÓN
+// Entrada título, texto y listado de contactos
 function initRepoAnimation() {
     const repoSection = document.querySelector(".repo");
 
@@ -2791,6 +2772,7 @@ function initRepoAnimation() {
     if (!titleRepo || !txtRepo || !itemsRepo.length || !titleRepoLines.length) return;
 
 
+    /// --> GSAP.SET
     gsap.set(titleRepo, {
         autoAlpha: 1
     });
@@ -2813,8 +2795,10 @@ function initRepoAnimation() {
         filter: "blur(10px)"
     });
 
+    /// --> TIMELINE
     const tlRepo = gsap.timeline();
 
+    // 1. Entra título
     tlRepo.to(titleRepoLines, {
         autoAlpha: 1,
         y: 0,
@@ -2827,6 +2811,7 @@ function initRepoAnimation() {
         }
     });
 
+    // 2. Entra texto
     tlRepo.to(txtRepo, {
         autoAlpha: 1,
         y: 0,
@@ -2835,6 +2820,7 @@ function initRepoAnimation() {
         ease: "power3.out"
     }, "<+=0.4");
 
+    // 3. Entran contactos
     tlRepo.to(itemsRepo, {
         autoAlpha: 1,
         y: 0,
@@ -2848,10 +2834,29 @@ function initRepoAnimation() {
     }, "<+=0.35");
 }
 
+// ░░░░░░░░ FOOTER — OPACITY 0 END
+function initFooterHeaderVisibility() {
+    const footer = document.querySelector(".ftr");
 
+    if (!footer) return;
 
-// FOOTER
+    ScrollTrigger.create({
+        trigger: footer,
+        start: "top 23%",
+        end: "bottom top",
 
+        onEnter: () => {
+            document.documentElement.classList.add("is-footer-in-view");
+        },
+
+        onLeaveBack: () => {
+            document.documentElement.classList.remove("is-footer-in-view");
+        }
+    });
+}
+
+// ░░░░░░░░ FOOTER — ANIMACIÓN
+// Entrada del titular final por caracteres
 function initFooterAnimation() {
     const ftr = document.querySelector(".ftr");
 
@@ -2859,12 +2864,14 @@ function initFooterAnimation() {
 
     const titleFtr = document.querySelector(".ftr .hf-xl");
 
+    /// --> SPLIT TEXT
     const titleFtrSplit = new SplitText(titleFtr, {
         type: "words,chars",
         wordsClass: "word",
         charsClass: "char"
     });
 
+    /// --> GSAP.SET
     gsap.set(titleFtr, {
         autoAlpha: 1,
         visibility: "visible",
@@ -2877,16 +2884,17 @@ function initFooterAnimation() {
         willChange: "transform, opacity, filter"
     });
 
+    /// --> TIMELINE
     const tlFooter = gsap.timeline({
         scrollTrigger: {
             trigger: ftr,
             start: "top 30%",
             once: true
-            // markers: true
         }
 
     });
 
+    // 1. Entra titular footer por caracteres
     tlFooter.to(titleFtrSplit.chars, {
         autoAlpha: 1,
         y: 0,
@@ -2898,11 +2906,10 @@ function initFooterAnimation() {
             from: "end"
         }
     });
-
 }
 
-// FAQS ANIMATION
-
+// ░░░░░░░░ FAQS — ANIMACIÓN ENTRADA
+// Entrada de título, FAQs y botón al hacer scroll
 function initFaqsAnimation() {
     const faqsSection = document.querySelector(".sec_faqs");
 
@@ -2918,7 +2925,7 @@ function initFaqsAnimation() {
 
     if (!titleFaqsLines.length) return;
 
-    // seteo
+    /// --> GSAP.SET
     gsap.set(titleFaqsLines, {
         autoAlpha: 0,
         y: 18,
@@ -2939,16 +2946,16 @@ function initFaqsAnimation() {
         });
     }
 
-    // timeline
+    /// --> TIMELINE
     const tlFaqs = gsap.timeline({
         scrollTrigger: {
             trigger: faqsSection,
             start: "top 75%",
             once: true
-            // markers: true
         }
     });
 
+    // 1. Entra título FAQs
     tlFaqs.to(titleFaqsLines, {
         autoAlpha: 1,
         y: 0,
@@ -2961,6 +2968,7 @@ function initFaqsAnimation() {
         }
     });
 
+    // 2. Entran items FAQs
     tlFaqs.to(itemsFaqs, {
         autoAlpha: 1,
         y: 0,
@@ -2974,6 +2982,7 @@ function initFaqsAnimation() {
     }, "<+=0.35");
 
     if (moreButton) {
+        // 3. Entra botón "+"
         tlFaqs.to(moreButton, {
             autoAlpha: 1,
             y: 0,
@@ -2984,11 +2993,13 @@ function initFaqsAnimation() {
     }
 }
 
-// INIT
-
+// ░░░░░░░░ INIT
+// Inicialización general + navegación interna con Swup
 let swup;
 let isSwupNavigation = false;
+let shouldResetScrollBeforeNextView = false;
 
+// Inicializa componentes y animaciones de la página actual
 async function initPage() {
     const swupContainer = document.querySelector("#swup");
 
@@ -2996,12 +3007,15 @@ async function initPage() {
         document.body.dataset.page = swupContainer.dataset.page;
     }
 
+    // 1. Carga includes antes de inicializar eventos / animaciones
     await loadIncludes();
 
+    // 2. Estado base header según página
     setInitialHeaderThemeForPage();
 
     initHomeLogoReload();
 
+    // 3. Inicializa interacciones y animaciones
     initFaqsMore();
     initFaqsAccordion();
 
@@ -3016,37 +3030,149 @@ async function initPage() {
 
     initRepoAnimation();
     initFooterAnimation();
+    initFooterHeaderVisibility();
 
+    // 4. Refresh final tras montar includes y animaciones
     requestAnimationFrame(() => {
         ScrollTrigger.refresh();
     });
 }
 
+
+// ░░░░░░░░ SCROLL — RESET INSTANTÁNEO
+// Resetea scroll sin animación (swup)
+function resetScrollTopInstant() {
+    gsap.killTweensOf(window);
+
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "auto"
+    });
+
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+}
+
+// Inicializa app y navegación Swup
 async function initApp() {
     await initPage();
 
     initResizeRefresh();
 
+    // ░░░░░░░░ HOME — CARGA COMPLETA DESDE PÁGINAS INTERNAS
+    // La home tiene intro, bloqueo de scroll y ScrollTriggers principales.
+    // Al volver con Swup puede heredar scrollY de la página anterior.
+    // Desde páginas internas, la home se carga como documento completo.
+    document.addEventListener("click", (event) => {
+        const link = event.target.closest("a[href]");
+
+        if (!link) return;
+
+        const url = new URL(link.href, window.location.origin);
+
+        const isHomeLink =
+            url.pathname === "/" ||
+            url.pathname.endsWith("/index.html");
+
+        const isCurrentPageHome =
+            document.body.dataset.page === "home";
+
+        if (!isHomeLink || isCurrentPageHome) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        window.location.href = url.href;
+    }, true);
+
+
+    /// --> SWUP
     swup = new Swup({
         containers: ["#swup"]
     });
 
-    swup.hooks.on("visit:start", () => {
+    // Activar clase de transición al iniciar navegación
+    swup.hooks.on("visit:start", (visit) => {
+        const isMobile = window.innerWidth < 1280;
+
+        // Escritorio: exactamente como antes
+        if (!isMobile) {
+            document.documentElement.classList.add("is-page-transitioning");
+            return;
+        }
+
         document.documentElement.classList.add("is-page-transitioning");
+
+        const fromHome = document.body.dataset.page === "home";
+
+        const toPath = visit.to?.url
+            ? new URL(visit.to.url, window.location.origin).pathname
+            : "";
+
+        const toInternalPage =
+            toPath.endsWith("/busco-ayuda.html") ||
+            toPath.endsWith("/herramienta.html");
+
+        shouldResetScrollBeforeNextView = fromHome && toInternalPage;
+
+        if (!shouldResetScrollBeforeNextView) return;
+
+        // Ocultamos scrollbar solo durante el reset móvil
+        document.documentElement.classList.add("is-scroll-resetting");
+
+        // Esperamos a que la transición verde tape la pantalla
+        setTimeout(() => {
+            ScrollTrigger.getAll().forEach((trigger) => {
+                trigger.kill();
+            });
+
+            resetScrollTopInstant();
+        }, 180);
     });
 
+    // Re-inicializa página tras cambio interno Swup
     swup.hooks.on("page:view", async () => {
         isSwupNavigation = true;
 
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+        const isMobile = window.innerWidth < 1280;
 
-        window.scrollTo(0, 0);
+        // Limpia ScrollTriggers anteriores antes de montar nueva página
+        ScrollTrigger.getAll().forEach((trigger) => {
+            trigger.kill();
+        });
+
+        // Escritorio: comportamiento original
+        if (!isMobile) {
+            window.scrollTo(0, 0);
+
+            await initPage();
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        document.documentElement.classList.remove("is-page-transitioning");
+                    }, 800);
+                });
+            });
+
+            return;
+        }
+
+        // Móvil: reset reforzado
+        resetScrollTopInstant();
 
         await initPage();
 
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
+                if (shouldResetScrollBeforeNextView) {
+                    resetScrollTopInstant();
+                    shouldResetScrollBeforeNextView = false;
+                }
+
                 setTimeout(() => {
+                    document.documentElement.classList.remove("is-scroll-resetting");
                     document.documentElement.classList.remove("is-page-transitioning");
                 }, 800);
             });
